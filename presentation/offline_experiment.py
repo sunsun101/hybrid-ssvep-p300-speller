@@ -18,6 +18,9 @@ import logging
 from utils import getdata, save_raw_to_dataframe, save_raw, drawTextOnScreen
 
 
+# "markers": {"1": 1.0, "2": 2.0, "3": 3.0, "4": 4.0, "5": 5.0, "6": 6.0, "7": 7.0, "8": 8.0, "9": 9.0, "A": 10.0, "B": 11.0, "C": 12.0, "D": 13.0, "E": 14.0, "F": 15.0, "G": 16.0, "H": 17.0, "I": 18.0, "J": 19.0, "K": 20.0, "L": 21.0, "M": 22.0, "N": 23.0, "O": 24.0, "P": 25.0, "Q": 26.0, "R": 27.0, "S": 28.0, "T": 29.0, "U": 30.0, "V": 31.0, "W": 32.0, "X": 33.0, "Y": 34.0, "Z": 35.0, "(": 36.0, "Space": 37.0, ")": 38.0, "!": 39.0, "-": 40.0, "<<": 41.0, ".": 42.0, "?": 43.0, ",": 44.0, "0":45.0}
+
+
 #Load config
 path = os.getcwd() + '\presentation'
 parser = argparse.ArgumentParser(description='Config file name')
@@ -46,14 +49,8 @@ no_subspeller = params['no_subspeller']
 
 
 subspellers = params["subspellers"]
-subspeller_1 = params['subspeller_1']
-subspeller_2 = params['subspeller_2']
-subspeller_3 = params['subspeller_3']
-subspeller_4 = params['subspeller_4']
-subspeller_5 = params['subspeller_5']
-subspeller_6 = params['subspeller_6']
 
-serial_port = params["serial_port"]
+# serial_port = params["serial_port"]
 board_id = params["board_id"]
 participant_id = params["participant_id"]
 recording_dir = params["recording_dir"]
@@ -65,6 +62,9 @@ width, height = get_screen_settings(system)
 
 #create a window
 window = visual.Window([width, height], screen=1, color=[1,1,1],blendMode='avg', useFBO=True, units="pix", fullscr=True)
+
+# window = visual.Window([1920, 1080], screen=1, color=[1,1,1],blendMode='avg', monitor="hybrid-speller-monitor", useFBO=True, units="deg", fullscr=True)
+# mywin = visual.Window(SCREEN_SIZE, color="black",monitor="Experiment Monitor" , units='norm',screen=SCREEN_NUM,fullscr=True) 
 refresh_rate = round(window.getActualFrameRate())
 print("Refresh Rate ==>", refresh_rate)
 
@@ -181,7 +181,7 @@ def flicker(board):
                     flicker.draw2(frame = frame)
                 frames += 1
                 window.flip()
-            eegMarking(board,marker)
+        eegMarking(board,marker)
 
 def main():
     global sequence
@@ -192,7 +192,7 @@ def main():
 
     #brainflow initialization 
     params = BrainFlowInputParams()
-    params.serial_port = serial_port
+    # params.serial_port = serial_port
     board_shim = BoardShim(board_id, params)
 
     #prepare board
@@ -237,6 +237,7 @@ def main():
                 # get_keypress()
             print("Sequence is", sequence)
             flicker(board_shim)
+            core.wait(1)
 
             # At the end of the trial, calculate real duration and amount of frames
             t1 = trialClock.getTime()  # Time at end of trial
