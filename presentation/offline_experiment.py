@@ -1,8 +1,11 @@
-from turtle import fillcolor, pos
+import sys
+import os
+path = os.path.dirname(os.path.dirname(__file__)) 
+sys.path.append(path)
+
 from psychopy import visual, core, event #import some libraries from PsychoPy
 import platform
-import os
-from utils_experiments import get_screen_settings, CheckerBoard
+from utils.gui import get_screen_settings, CheckerBoard
 import argparse
 import json
 import numpy as np
@@ -13,16 +16,17 @@ import threading
 import brainflow
 from brainflow.board_shim import BoardShim, BrainFlowInputParams
 import time
-import sys
 import logging
-from utils import getdata, save_raw_to_dataframe, save_raw, drawTextOnScreen
+from utils.common import getdata, save_raw, drawTextOnScreen
+from beeply.notes import *
 
 
 # "markers": {"1": 1.0, "2": 2.0, "3": 3.0, "4": 4.0, "5": 5.0, "6": 6.0, "7": 7.0, "8": 8.0, "9": 9.0, "A": 10.0, "B": 11.0, "C": 12.0, "D": 13.0, "E": 14.0, "F": 15.0, "G": 16.0, "H": 17.0, "I": 18.0, "J": 19.0, "K": 20.0, "L": 21.0, "M": 22.0, "N": 23.0, "O": 24.0, "P": 25.0, "Q": 26.0, "R": 27.0, "S": 28.0, "T": 29.0, "U": 30.0, "V": 31.0, "W": 32.0, "X": 33.0, "Y": 34.0, "Z": 35.0, "(": 36.0, "Space": 37.0, ")": 38.0, "!": 39.0, "-": 40.0, "<<": 41.0, ".": 42.0, "?": 43.0, ",": 44.0, "0":45.0}
 
+a = beeps(800)
 
 #Load config
-path = os.getcwd() + '\presentation'
+path = os.getcwd() + r'\utils'
 parser = argparse.ArgumentParser(description='Config file name')
 parser.add_argument('-f', '--file', metavar='ConfigFile', type=str,
                     default='speller_config.json', help="Name of the config file for freq "
@@ -143,8 +147,10 @@ def randomize_characters():
 def eegMarking(board,marker):
     print("Inserting marker", marker)
     board.insert_marker(marker)
+    time.sleep(0.1)
 
 def flicker(board):
+    print("POSITIONS", positions)
     global frames
     global t0
     # For the flickering
@@ -167,7 +173,7 @@ def flicker(board):
         frames = 0
         #flicker random sequence of each speller parallely
         # runInParallel(flicker_subspeller(randomized_subspeller[1]), flicker_subspeller(randomized_subspeller[2]), flicker_subspeller(randomized_subspeller[3]),flicker_subspeller(randomized_subspeller[4]))
-        
+        eegMarking(board, markers['trial_start'])
         for m in range(9):
             get_keypress()
             elementsArray = [] # stores each character from randomized subspeller to flicker at once
@@ -175,13 +181,14 @@ def flicker(board):
                 get_keypress()
                 if len(randomized_subspeller[n])>m:
                     elementsArray.append(flickers[str(randomized_subspeller[n][m])])
+            if target_flicker in elementsArray :
+                eegMarking(board,marker)
             for frame, j in enumerate(range(epoch_frames)):
                 get_keypress()
                 for flicker in elementsArray:
                     flicker.draw2(frame = frame)
                 frames += 1
                 window.flip()
-        eegMarking(board,marker)
 
 def main():
     global sequence
@@ -217,9 +224,9 @@ def main():
         core.wait(6)
 
         for block in range(num_block):
-
-            drawTextOnScreen('Starting block ' + str(block + 1) ,window)
-            core.wait(3)
+            a.hear('A_')
+            drawTextOnScreen('Starting block ' + str(block + 1) + ".Please donot move now",window)
+            core.wait(7)
             sequence = random.sample(target_characters, 45)
             #randomize the characters of the sub speller. returns a dictionary of randomized characters in each sub speller. {1: ['S', 'L', 'U', 'J', 'T', 'K', 'C', 'B', 'A'], 2: ['F', 'M', 'V', 'D', 'W', 'N', 'O', 'E', 'X'], 3: ['Q', '0', 'I', 'Z', 'H', 'R', 'Y', 'P', 'G'], 4: ['2', '5', '1', '6', '4', '3'], 5: ['8', '9', '?', '7', ',', '.'], 6: ['Space', '<<', '-', '!', '(', ')']}
             randomized_subspeller = randomize_characters()
@@ -265,8 +272,9 @@ def main():
             ver_divider_2.autoDraw = False
             for target in targets.values():
                 target.autoDraw = False
-            drawTextOnScreen('Block Break 1 Minute',window)
-            core.wait(block_break)
+            if (block + 1) < num_block: 
+                drawTextOnScreen('Block Break 1 Minute',window)
+                core.wait(block_break)
             #throw data
             data = board_shim.get_board_data()
 
@@ -284,6 +292,8 @@ def main():
     #cleanup
     window.close()
     core.quit()
+
+
 
 
 if __name__ == "__main__":

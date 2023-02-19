@@ -119,7 +119,7 @@ class CheckerBoard:
     
     """
 
-    def __init__(self, window, size=100, rows=1, columns=1, frequency=10, phase=0, amplitude=1., wave_type='sin', duration=2.2, fps=60, base_pos=(0, 0)):
+    def __init__(self, window, size=1000, rows=1, columns=1, frequency=10, phase=0, amplitude=1., wave_type='sin', duration=2.2, fps=60, base_pos=(0, 0)):
         self.window = window
         self.size = size
         self.rows = rows
@@ -382,8 +382,8 @@ class CheckerBoard:
                 
 
                 rect = visual.Rect(self.window,
-                                height = 80,
-                                width = 100,  
+                                height = 200,
+                                width = 220,  
                                 pos=(x_pos, y_pos), 
                                 lineColor=square_color, fillColor=square_color)
 
