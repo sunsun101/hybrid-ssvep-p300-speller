@@ -9,23 +9,6 @@ import json
 from psychopy import visual
 import numpy as np
 
-#Load config
-path = os.getcwd() + r'\utils'
-parser = argparse.ArgumentParser(description='Config file name')
-parser.add_argument('-f', '--file', metavar='ConfigFile', type=str,
-                    default='speller_config.json', help="Name of the config file for freq "
-                                    "and amplitude. Default: %(default)s.")
-args = parser.parse_args()
-config_path = os.path.join(path, args.file)
-
-with open(config_path, 'r') as config_file:
-    params = json.load(config_file)
-
-
-participant_id = params["participant_id"]
-type_of_file = params["type_of_file"]
-csv_dir = params["csv_dir"]
-
 def create_session_folder(subj,dir):
     base_path = os.getcwd() + "\\"
     dir = base_path + dir

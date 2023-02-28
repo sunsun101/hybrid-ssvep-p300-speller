@@ -19,46 +19,10 @@ import time
 import logging
 from utils.common import getdata, save_raw, drawTextOnScreen
 from beeply.notes import *
+from utils.speller_config import *
 
-
-# "markers": {"1": 1.0, "2": 2.0, "3": 3.0, "4": 4.0, "5": 5.0, "6": 6.0, "7": 7.0, "8": 8.0, "9": 9.0, "A": 10.0, "B": 11.0, "C": 12.0, "D": 13.0, "E": 14.0, "F": 15.0, "G": 16.0, "H": 17.0, "I": 18.0, "J": 19.0, "K": 20.0, "L": 21.0, "M": 22.0, "N": 23.0, "O": 24.0, "P": 25.0, "Q": 26.0, "R": 27.0, "S": 28.0, "T": 29.0, "U": 30.0, "V": 31.0, "W": 32.0, "X": 33.0, "Y": 34.0, "Z": 35.0, "(": 36.0, "Space": 37.0, ")": 38.0, "!": 39.0, "-": 40.0, "<<": 41.0, ".": 42.0, "?": 43.0, ",": 44.0, "0":45.0}
 
 a = beeps(800)
-
-#Load config
-path = os.getcwd() + r'\utils'
-parser = argparse.ArgumentParser(description='Config file name')
-parser.add_argument('-f', '--file', metavar='ConfigFile', type=str,
-                    default='speller_config.json', help="Name of the config file for freq "
-                                    "and amplitude. Default: %(default)s.")
-args = parser.parse_args()
-config_path = os.path.join(path, args.file)
-
-with open(config_path, 'r') as config_file:
-    params = json.load(config_file)
-
-# Experimental params
-size = params['size']
-num_block = params['num_block']
-num_trial = params['num_trial']
-epoch_duration = params['epoch_duration']
-iti_duration = params['iti_duration']
-cue_duration = params['cue_duration']
-freq = params['freqs']
-positions = [tuple(position) for position in params['positions']]
-phases = params['phases']
-target_characters = params['target_characters']
-amp = params['amplitude']
-no_subspeller = params['no_subspeller']
-
-
-subspellers = params["subspellers"]
-
-# serial_port = params["serial_port"]
-board_id = params["board_id"]
-participant_id = params["participant_id"]
-recording_dir = params["recording_dir"]
-block_break = params["block_break"]
 
 # Window parameters
 system = platform.system()
@@ -73,12 +37,11 @@ refresh_rate = round(window.getActualFrameRate())
 print("Refresh Rate ==>", refresh_rate)
 
 # Time conversion to frames
-epoch_frames = int(epoch_duration * refresh_rate)
+epoch_frames = int(EPOCH_DURATION * refresh_rate)
 print("Epoch frames ==>",epoch_frames)
-iti_frames = int(iti_duration * refresh_rate)
+iti_frames = int(ITI_DURATION * refresh_rate)
 iti_frames_cal = int(0.8 * refresh_rate)
-cue_frames = int(cue_duration * refresh_rate)   
-markers = params["markers"]
+cue_frames = int(CUE_DURATION * refresh_rate)   
 
 #Presentation content
 
@@ -92,14 +55,14 @@ cal_start = visual.TextStim(window, text=calib_text_start, color=(-1., -1., -1.)
 cal_end = visual.TextStim(window, text=calib_text_end, color=(-1., -1., -1.))
 
 targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=35)
-        for pos, target in zip(positions, target_characters)}
+        for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
 
 
 wave_type = "sin"
-flickers = {f"{target}": CheckerBoard(window=window, size=size, frequency=f, phase=phase, amplitude=amp, 
-                                    wave_type=wave_type, duration=epoch_duration, fps=refresh_rate,
+flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, phase=phase, amplitude=AMPLITUDE, 
+                                    wave_type=wave_type, duration=EPOCH_DURATION, fps=refresh_rate,
                                     base_pos=pos)
-            for f, pos, phase, target in zip(freq, positions, phases, target_characters)}
+            for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
 
 hori_divider = visual.Line(window, start=[-850,-75], end=[850,-75], lineColor='black')
 ver_divider_1 = visual.Line(window, start=[-300,350], end=[-300,-350], lineColor='black')
@@ -137,8 +100,8 @@ def flicker_subspeller(sub_characters):
 
 def randomize_characters():
     randomized_subspeller = {}
-    for n in range(1, no_subspeller + 1):
-        subspeller_char = subspellers[str(n)]
+    for n in range(1, NO_SUBSPELLER + 1):
+        subspeller_char = SUBSPELLERS[str(n)]
         random_seq = random.sample(subspeller_char, len(subspeller_char))
         randomized_subspeller[n] = random_seq
     print(randomized_subspeller)
@@ -150,7 +113,7 @@ def eegMarking(board,marker):
     time.sleep(0.1)
 
 def flicker(board):
-    print("POSITIONS", positions)
+    print("POSITIONS", POSITIONS)
     global frames
     global t0
     # For the flickering
@@ -160,7 +123,7 @@ def flicker(board):
         target_pos = (target_flicker.base_x, target_flicker.base_y)
         target_freq = target_flicker.freq
         target_phase = target_flicker.phase
-        marker = markers[str(target)]
+        marker = MARKERS[str(target)]
 
 
         t0 = trialClock.getTime()  # Retrieve time at start of cue presentation
@@ -173,7 +136,7 @@ def flicker(board):
         frames = 0
         #flicker random sequence of each speller parallely
         # runInParallel(flicker_subspeller(randomized_subspeller[1]), flicker_subspeller(randomized_subspeller[2]), flicker_subspeller(randomized_subspeller[3]),flicker_subspeller(randomized_subspeller[4]))
-        eegMarking(board, markers['trial_start'])
+        eegMarking(board, MARKERS['trial_start'])
         for m in range(9):
             get_keypress()
             elementsArray = [] # stores each character from randomized subspeller to flicker at once
@@ -200,7 +163,7 @@ def main():
     #brainflow initialization 
     params = BrainFlowInputParams()
     # params.serial_port = serial_port
-    board_shim = BoardShim(board_id, params)
+    board_shim = BoardShim(BOARD_ID, params)
 
     #prepare board
     try:
@@ -223,11 +186,11 @@ def main():
         window.flip()
         core.wait(6)
 
-        for block in range(num_block):
+        for block in range(NUM_BLOCK):
             a.hear('A_')
             drawTextOnScreen('Starting block ' + str(block + 1) + ".Please donot move now",window)
             core.wait(7)
-            sequence = random.sample(target_characters, 45)
+            sequence = random.sample(TARGET_CHARACTERS, 45)
             #randomize the characters of the sub speller. returns a dictionary of randomized characters in each sub speller. {1: ['S', 'L', 'U', 'J', 'T', 'K', 'C', 'B', 'A'], 2: ['F', 'M', 'V', 'D', 'W', 'N', 'O', 'E', 'X'], 3: ['Q', '0', 'I', 'Z', 'H', 'R', 'Y', 'P', 'G'], 4: ['2', '5', '1', '6', '4', '3'], 5: ['8', '9', '?', '7', ',', '.'], 6: ['Space', '<<', '-', '!', '(', ')']}
             randomized_subspeller = randomize_characters()
             
@@ -253,15 +216,15 @@ def main():
             print(f"Total frames: {frames}")
 
             # saving the data from 1 block
-            block_name = f'{participant_id}{block}'
+            block_name = f'{PARTICIPANT_ID}{block}'
             data = board_shim.get_board_data()
             print("WHAT IS IN DATA")
             print(data)
             data_copy = data.copy()
-            raw = getdata(data_copy,board_id,n_samples = 250,dropEnable = False)
+            raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
             print("WHAT IS IN RAW")
             print(raw)
-            save_raw(raw,block_name,recording_dir)
+            save_raw(raw,block_name,RECORDING_DIR)
 
         
             #giving block break
@@ -272,9 +235,9 @@ def main():
             ver_divider_2.autoDraw = False
             for target in targets.values():
                 target.autoDraw = False
-            if (block + 1) < num_block: 
+            if (block + 1) < NUM_BLOCK: 
                 drawTextOnScreen('Block Break 1 Minute',window)
-                core.wait(block_break)
+                core.wait(BLOCK_BREAK)
             #throw data
             data = board_shim.get_board_data()
 
