@@ -8,6 +8,7 @@ import argparse
 import json
 from psychopy import visual
 import numpy as np
+from utils.speller_config import *
 
 def create_session_folder(subj,dir):
     base_path = os.getcwd() + "\\"
@@ -31,7 +32,7 @@ def getdata(data,board,clear_buffer=False,n_samples=None,dropEnable = False):
     # get row index which holds markers
     # print("INSIDE GET DATA")
     # print(data.shape)
-    # marker_channel = BoardShim.get_marker_channel(board)
+    marker_channel = BoardShim.get_marker_channel(board)
     
     #row which hold eeg data
     eeg_channels = BoardShim.get_eeg_channels(board)
@@ -39,14 +40,14 @@ def getdata(data,board,clear_buffer=False,n_samples=None,dropEnable = False):
     data[eeg_channels] = data[eeg_channels] / 1e6
     #print(f'After {data[eeg_channels]}')
     #eeg row + marker row (8 + 1)
-    # data = data[eeg_channels + [marker_channel]]
-    data = data[eeg_channels]
+    data = data[eeg_channels + [marker_channel]]
+    # data = data[eeg_channels]
     
     #string of all channel name ['Fp1', 'Fp2', 'C3', 'C4', 'P7', 'P8', 'O1', 'O2']
     ch_names = BoardShim.get_eeg_names(board)
-    # ch_types = (['eeg'] * len(eeg_channels)) + ['stim']
-    ch_types = (['eeg'] * len(eeg_channels))
-    # ch_names = ch_names + ["Stim Markers"]
+    ch_types = (['eeg'] * len(eeg_channels)) + ['stim']
+    # ch_types = (['eeg'] * len(eeg_channels))
+    ch_names = ch_names + ["Stim Markers"]
     
     # print(ch_names)
     #sample rate
@@ -80,8 +81,8 @@ def getdata(data,board,clear_buffer=False,n_samples=None,dropEnable = False):
 def save_raw(raw, name,dir):
     print("RAW is here")
     print(raw)
-    folder_path = create_session_folder(participant_id,dir)
-    raw.save(os.path.join(folder_path, f'{name}{type_of_file}'), overwrite = True)
+    folder_path = create_session_folder(PARTICIPANT_ID,dir)
+    raw.save(os.path.join(folder_path, f'{name}{TYPE_OF_FILE}'), overwrite = True)
     return os.path.basename(folder_path)
 
 
@@ -89,12 +90,12 @@ def save_ssvep_raw(raw, name,dir):
     print("RAW is here")
     print(raw)
     folder_path = create_session_folder(name,dir)
-    raw.save(os.path.join(folder_path, f'{name}{type_of_file}'), overwrite = True)
+    raw.save(os.path.join(folder_path, f'{name}{TYPE_OF_FILE}'), overwrite = True)
     return os.path.basename(folder_path)
 
 def save_raw_to_dataframe(raw,name):
     epoch_dataframe = raw.copy().to_data_frame()
-    csv_folder = create_session_folder(participant_id,csv_dir)
+    csv_folder = create_session_folder(PARTICIPANT_ID,CSV_DIR)
     csv_name = f'{name}.csv'
     epoch_dataframe.to_csv(os.path.join(csv_folder,csv_name),encoding='utf-8')
 

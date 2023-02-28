@@ -3,11 +3,11 @@ WIDTH: int = 100
 
 SIZE: int = 100
 NUM_BLOCK: int = 5
-NUM_TRIAL: int = 15
+NUM_TRIAL: int = 5
 NUM_SESSION: int = 3
 EPOCH_DURATION: float = 3
 ITI_DURATION: float = 0.1
-CUE_DURATION: float = 1
+CUE_DURATION: float = 0.7
 NO_SUBSPELLER: int = 6
 # FREQS: list = [12.4, 12.4, 12.4, 12.6, 12.6, 12.6, 12.8, 12.8, 12.8,
 #                12.4, 12.4, 12.4, 12.6, 12.6, 12.6, 12.8, 12.8, 12.8,
@@ -44,12 +44,12 @@ PHASES: list = [0, 1.75, 1.50, 1.25, 1.0, 0.75, 0.50, 0.25, 2.0, 0.35, 0.10, 1.8
 # PHASES: list = [0 , 0 , 0, 0, 0, 0]
 # PHASES: list = [0 , 0.35 , 0 , 0.35 , 0 , 0.35]
 PHASES: list = [0 , 0.35 , 0.70 , 1.05 , 1.40 , 1.75, 0.10, 0.45, 0.80 ]
-# TARGET_CHARACTERS:list = ["A", "B", "C", "J", "K", "L", "S", "T", "U",
-#                       "D", "E", "F", "M", "N", "O", "V", "W", "X",
-#                       "G", "H", "I", "P", "Q", "R", "Y", "Z", "0",
-#                       "1", "2", "3", "7", "8", "9", "(", "Space",")",
-#                       "4", "5", "6", ".", "?", ",", "!", "-", "<<"]
-TARGET_CHARACTERS:list = ["A", "B", "C", "J", "K", "L", "S", "T", "U"]
+TARGET_CHARACTERS:list = ["A", "B", "C", "J", "K", "L", "S", "T", "U",
+                      "D", "E", "F", "M", "N", "O", "V", "W", "X",
+                      "G", "H", "I", "P", "Q", "R", "Y", "Z", "0",
+                      "1", "2", "3", "7", "8", "9", "(", "Space",")",
+                      "4", "5", "6", ".", "?", ",", "!", "-", "<<"]
+# TARGET_CHARACTERS:list = ["A", "B", "C", "J", "K", "L", "S", "T", "U"]
 
 # TARGET_CHARACTERS:list = ["A", "B", "C"]
 # TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F"]

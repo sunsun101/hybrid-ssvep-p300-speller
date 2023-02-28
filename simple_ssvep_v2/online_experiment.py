@@ -113,6 +113,7 @@ def flicker(board):
         for frame in range(cue_frames):
                 cue.draw()
                 window.flip()
+                core.wait(CUE_DURATION)
 
         frames = 0
         for frame, j in enumerate(range(epoch_frames)):
