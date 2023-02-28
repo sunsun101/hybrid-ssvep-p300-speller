@@ -4,7 +4,8 @@ import mne
 
 def concat_dataset(subjects, num_blocks):
     raws = []
-    base_path = "E:\Thesis\HybridSpeller\\record"
+    # base_path = "E:\Thesis\HybridSpeller\\record"
+    base_path = "E:\Thesis\HybridSpeller\\simple_ssvep_v2\\record"
 
     for subject in subjects:
         for i in range(1,num_blocks):

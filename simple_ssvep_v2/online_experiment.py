@@ -43,7 +43,7 @@ cue_frames = int(CUE_DURATION * refresh_rate)
 
 #Presentation content
 
-cue = visual.Rect(window, width=220, height=200, pos=[0, 0], lineWidth=3, lineColor='red')
+cue = visual.Rect(window, width=WIDTH, height=HEIGHT, pos=[0, 0], lineWidth=3, lineColor='red')
 
 calib_text_start = "Starting callibration phase.Please avoid moving or blinking.\n\
 You may blink when shifting your gaze.Focus your target on the characters presented with red cue."
@@ -66,7 +66,7 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
 
 block_break_text = "Block Break 1 Minutes"
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
-display_text_start = visual.TextStim(window, text="", color=(-1., -1., -1.))
+display_text_start = visual.TextStim(window, text="", color=(-1., -1., -1.), pos=(0,500))
 
 def get_keypress():
     keys = event.getKeys()
@@ -83,11 +83,12 @@ def eegMarking(board,marker):
     time.sleep(0.1)
 
 def get_predicted_result(data):
-    list_freqs = [6, 10, 15]
+    list_freqs = FREQS
+    list_phases = PHASES
     fs = 250
     num_harms = 5
     num_fbs = 5
-    result = fbcca_realtime(data, list_freqs, fs, num_harms, num_fbs)
+    result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)
     # print("Target Character found", TARGET_CHARACTERS[result])
     return TARGET_CHARACTERS[result]
 
@@ -96,12 +97,14 @@ def flicker(board):
     global frames
     global t0
     # For the flickering
+    
     for target in sequence:
+
         board_shim.get_board_data()
         get_keypress()
         target_flicker = flickers[str(target)]
         target_pos = (target_flicker.base_x, target_flicker.base_y)
-        print(target_flicker.base_x)
+        # print(target_flicker.base_x)
 
         t0 = trialClock.getTime()  # Retrieve time at start of cue presentation
         
@@ -112,7 +115,6 @@ def flicker(board):
                 window.flip()
 
         frames = 0
-
         for frame, j in enumerate(range(epoch_frames)):
             get_keypress()
             for flicker in flickers.values():
@@ -124,9 +126,8 @@ def flicker(board):
         data = board_shim.get_board_data()
         data_copy = data.copy()
         raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
-        raw.plot_psd()
+        # raw.plot_psd()
         output = get_predicted_result(raw.get_data())
-        print("The predicted output is ====>", output)
         display_text_start.setText(f"Output: {output}")
         display_text_start.draw()
         window.flip()

@@ -8,6 +8,11 @@ from scipy.linalg import eigh, pinv, qr
 from scipy.stats import pearsonr
 from scipy.sparse import block_diag, identity, vstack, spmatrix
 from scipy.sparse.linalg import eigsh
+import os
+import sys
+path = os.path.dirname(os.path.dirname(__file__)) 
+sys.path.append(path)
+
 from utils.concat_dataset import concat_dataset
 import mne
 from metabci.base import generate_cca_references, generate_filterbank, FilterBankSSVEP
@@ -198,58 +203,34 @@ def get_phase(event):
 
 def main():
 
-    wp = [(11,92),(22,92),(34,92),(46,92),(58,92),(70,92),(82,92)]
-    ws = []
-    filterbank = generate_filterbank(wp, ws, srate=250)
-
-    subjects = ['best_recording', 'wan']
+ 
+    subjects = ['sunsun']
     raw = concat_dataset(subjects, 5)
     raw.filter(11, 17, method='iir')
     events = mne.find_events(raw)
     events = events[events[:,2] != 99 ]
-    print(events)
-    print(type(events))
 
     freq_list = [get_freq(int(event)) for event in events[:,2]]
     phase_list = [get_phase(int(event)) for event in events[:,2]]
 
-    Yf = generate_cca_references(freqs=freq_list, srate=250, T=0.2, phases=phase_list, n_harmonics=5)
+    # freq_list = FREQS
+    # phase_list = PHASES
+    print("Here is the freq list", freq_list)
+    print("Here is the phase list", phase_list)
 
-    filterweights = [(idx_filter+1) ** (-1.25) + 0.25 for idx_filter in range(5)]
+    Yf = generate_cca_references(freqs=freq_list, srate=250, T=2.204, phases=phase_list, n_harmonics=5)
+
     epochs = mne.Epochs(raw=raw,events=events, baseline=None, tmin=-0.2, tmax=2.0, reject=None, reject_by_annotation=False)
     X = epochs.get_data()
     y = events[:,2]
-    # estimator=ECCA(n_components = 1, n_jobs=-1)
-    estimator=FBECCA(filterbank=filterbank, n_components=1, filterweights=np.array(filterweights), n_jobs=-1)
-    accs = []
-
-    meta = pd.DataFrame(
-                            {
-                                "subject": 1,
-                                "session": 1,
-                                "run": 1,
-                                "event": 1,
-                                "trial_id": 1,
-                                "dataset": 1,
-                            }, index=[0]
-                        )
-
-    # 6-fold cross validation
-    # set_random_seeds(38)
-    # kfold = 6
-    # indices = generate_kfold_indices(meta, kfold=kfold)
-
-    # for k in range(kfold):
-    #     train_ind, validate_ind, test_ind = match_kfold_indices(k, meta, indices)
-    #     # merge train and validate set
-    #     train_ind = np.concatenate((train_ind, validate_ind))
-    #     p_labels = estimator.fit(X=X[train_ind],y=y[train_ind],f=Yf).predict(X[test_ind])
-    #     accs.append(np.mean(p_labels==y[test_ind]))
-    # print(np.mean(accs))
-
+    estimator=ECCA(n_components = 1, n_jobs=-1)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+    print("Shape of X train",X_train.shape)
+    print("Shape of Yf", Yf.shape)
     model = estimator.fit(X_train, y_train, Yf)
     preds = model.predict(X_test)
+    print(preds)
+    print(y_test)
     acc = np.mean(preds==y_test)
     print(acc)
 

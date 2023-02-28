@@ -9,6 +9,11 @@ import platform
 import scipy.signal
 import sys
 import warnings
+import os
+import sys
+path = os.path.dirname(os.path.dirname(__file__)) 
+sys.path.append(path)
+from utils.speller_config import *
 
 
 import numpy as np
@@ -382,8 +387,8 @@ class CheckerBoard:
                 
 
                 rect = visual.Rect(self.window,
-                                height = 200,
-                                width = 220,  
+                                height = HEIGHT,
+                                width = WIDTH,  
                                 pos=(x_pos, y_pos), 
                                 lineColor=square_color, fillColor=square_color)
 

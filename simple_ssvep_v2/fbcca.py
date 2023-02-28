@@ -31,6 +31,8 @@ from sklearn.cross_decomposition import CCA
 from filterbank import filterbank
 from scipy.stats import pearsonr, mode
 import numpy as np
+from typing import Optional, Union
+from numpy import ndarray
 
 
 # Adapted for working with python mne
@@ -103,7 +105,7 @@ Reference:
 '''
 
 
-def cca_reference(list_freqs, fs, num_smpls, num_harms=3):
+def cca_reference(list_freqs, fs, num_smpls, phases: Optional[Union[ndarray, int, float]] = None, num_harms=3):
     num_freqs = len(list_freqs)
     tidx = np.arange(1, num_smpls + 1) / fs  # time index
 
@@ -112,19 +114,44 @@ def cca_reference(list_freqs, fs, num_smpls, num_harms=3):
         tmp = []
         for harm_i in range(1, num_harms + 1):
             stim_freq = list_freqs[freq_i]  # in HZ
+            stim_phase = phases[freq_i]
             # Sin and Cos
-            tmp.extend([np.sin(2 * np.pi * tidx * harm_i * stim_freq),
-                        np.cos(2 * np.pi * tidx * harm_i * stim_freq)])
+            tmp.extend([np.sin(2 * np.pi *  tidx * harm_i * stim_freq + (np.pi * stim_phase)),
+                        np.cos(2 * np.pi * tidx * harm_i * stim_freq + (np.pi * stim_phase))])
         y_ref[freq_i] = tmp  # 2*num_harms because include both sin and cos
 
     return y_ref
+
+    # if isinstance(list_freqs, int) or isinstance(list_freqs, float):
+    #     freqs = [list_freqs]
+    # freqs = np.array(list_freqs)[:, np.newaxis]
+    # if phases is None:
+    #     phases = 0
+    # if isinstance(phases, int) or isinstance(phases, float):
+    #     phases = np.array([phases])
+    # phases = np.array(phases)[:, np.newaxis]
+    # t = np.linspace(0, num_smpls, int(num_smpls * fs))
+
+    # Yf = []
+    # for i in range(num_harms):
+    #     Yf.append(
+    #         np.stack(
+    #             [
+    #                 np.sin(2 * np.pi * (i + 1) * freqs * t + np.pi * phases),
+    #                 np.cos(2 * np.pi * (i + 1) * freqs * t + np.pi * phases),
+    #             ],
+    #             axis=1,
+    #         )
+    #     )
+    # Yf = np.concatenate(Yf, axis=1)
+    # return Yf
 
 
 '''
 Base on fbcca, but adapt to our input format
 '''
 
-def fbcca_realtime(eeg, list_freqs, fs, num_harms=3, num_fbs=5):
+def fbcca_realtime(eeg, list_freqs, list_phases, fs, num_harms=3, num_fbs=5):
     print("EEG shape: ", eeg.shape)
 
     fb_coefs = np.power(np.arange(1, num_fbs + 1), (-1.25)) + 0.25
@@ -132,7 +159,7 @@ def fbcca_realtime(eeg, list_freqs, fs, num_harms=3, num_fbs=5):
     num_targs = len(list_freqs)
     # print("HERE IS THE EEG SHAPE", eeg.shape)
     _, num_smpls = eeg.shape  # 40 taget (means 40 fre-phase combination that we want to predict)
-    y_ref = cca_reference(list_freqs, fs, num_smpls, num_harms)
+    y_ref = cca_reference(list_freqs, fs, num_smpls, list_phases, num_harms)
     cca = CCA(n_components=1)  # initilize CCA
 
     # result matrix

@@ -8,7 +8,7 @@ import warnings
 import scipy.signal
 import numpy as np
 
-def filterbank(eeg, fs, idx_fb):    
+def filterbank(eeg, fs, idx_fb):
     if idx_fb == None:
         warnings.warn('stats:filterbank:MissingInput '\
                           +'Missing filter index. Default value (idx_fb = 0) will be used.')
@@ -41,12 +41,12 @@ def filterbank(eeg, fs, idx_fb):
     
     if (num_trials == 1):
         for ch_i in range(num_chans):
-            #apply filter, zero phass filtering by applying a linear filter twice, once forward and once backwards.
-            # to match matlab result we need to change padding length
-            y[ch_i, :] = scipy.signal.filtfilt(B, A, eeg[ch_i, :])
+            #apply zero-phase filter
+            y[ch_i, :] = scipy.signal.filtfilt(B, A, eeg[ch_i, :], method='gust')  
         
     else:
         for trial_i in range(num_trials):
             for ch_i in range(num_chans):
-                y[:, ch_i, trial_i] = scipy.signal.filtfilt(B, A, eeg[:, ch_i, trial_i])           
+                y[:, ch_i, trial_i] = scipy.signal.filtfilt(B, A, eeg[:, ch_i, trial_i], method='gust')
+                
     return y

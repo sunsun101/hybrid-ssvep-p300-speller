@@ -80,7 +80,7 @@ def getdata(data,board,clear_buffer=False,n_samples=None,dropEnable = False):
     raw_data.set_montage(montage)
     # raw_data=raw_data.notch_filter([50,75,100], filter_length='auto')
     # raw_data = raw_data.notch_filter(np.arange(50, 125, 50), filter_length='auto', phase='zero')
-    raw_data = raw_data.notch_filter([50,100])
+    raw_data = raw_data.notch_filter([50,100], trans_bandwidth = 3)
     raw_data = raw_data.filter(4,77)
     #2 electrode
     
