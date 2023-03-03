@@ -9,6 +9,7 @@ mne = "*"
 beeply = "*"
 sklearn = "*"
 scikit-learn = "*"
+torch = "*"
 
 [dev-packages]
 ipykernel = "*"

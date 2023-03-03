@@ -44,7 +44,7 @@ cue_frames = int(CUE_DURATION * refresh_rate)
 
 #Presentation content
 
-cue = visual.Rect(window, width=100, height=80, pos=[0, 0], lineWidth=3, lineColor='red')
+cue = visual.Rect(window, width=WIDTH, height=HEIGHT, pos=[0, 0], lineWidth=3, lineColor='red')
 
 calib_text_start = "Starting callibration phase.Please avoid moving or blinking.\n\
 You may blink when shifting your gaze.Focus your target on the characters presented with red cue."
@@ -122,7 +122,7 @@ def flicker(board):
         target_pos = (target_flicker.base_x, target_flicker.base_y)
         target_freq = target_flicker.freq
         target_phase = target_flicker.phase
-        marker = markers[str(target)]
+        marker = MARKERS[str(target)]
 
 
         t0 = trialClock.getTime()  # Retrieve time at start of cue presentation
@@ -135,7 +135,7 @@ def flicker(board):
         frames = 0
         #flicker random sequence of each speller parallely
         # runInParallel(flicker_subspeller(randomized_subspeller[1]), flicker_subspeller(randomized_subspeller[2]), flicker_subspeller(randomized_subspeller[3]),flicker_subspeller(randomized_subspeller[4]))
-        eegMarking(board, markers['trial_start'])
+        eegMarking(board, MARKERS['trial_start'])
         
         # IDEA
         # Generating an entire epoch of frames
@@ -321,3 +321,6 @@ def main():
     #cleanup
     window.close()
     core.quit()
+
+if __name__ == "__main__":
+    main()

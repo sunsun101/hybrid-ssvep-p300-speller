@@ -152,7 +152,7 @@ Base on fbcca, but adapt to our input format
 '''
 
 def fbcca_realtime(eeg, list_freqs, list_phases, fs, num_harms=3, num_fbs=5):
-    print("EEG shape: ", eeg.shape)
+    # print("EEG shape: ", eeg.shape)
 
     fb_coefs = np.power(np.arange(1, num_fbs + 1), (-1.25)) + 0.25
 
@@ -184,9 +184,9 @@ def fbcca_realtime(eeg, list_freqs, list_phases, fs, num_harms=3, num_fbs=5):
                 r_tmp = 0
             r[fb_i, class_i] = r_tmp
     rho = np.dot(fb_coefs, r)  # weighted sum of r from all different filter banks' result
-    print("rho: ", rho)
+    # print("rho: ", rho)
     result = np.argmax(rho) # get maximum from the target as the final predict (get the index), and index indicates the maximum entry(most possible target)
-    print("result: ", result)
+    # print("result: ", result)
     r_tmp_mode.append(result)
     print("correlation: ", abs(rho[result]))
     r_tmp_corr_avg.append(abs(rho[result]))

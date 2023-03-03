@@ -21,6 +21,8 @@ from utils.common import getdata, save_raw, drawTextOnScreen
 from beeply.notes import *
 from utils.speller_config import *
 from fbcca import fbcca_realtime
+import pickle
+from models.cca import ECCA
 
 a = beeps(800)
 # Window parameters
@@ -28,7 +30,29 @@ system = platform.system()
 width, height = get_screen_settings(system)
 
 #create a window
-window = visual.Window([width, height], screen=1, color=[1,1,1],blendMode='avg', useFBO=True, units="pix", fullscr=True)
+window = visual.Window([width, height], screen=1, color=[1,1,1],blendMode='avg', useFBO=True, units=UNITS, monitor="speller")
+
+def get_stimuli_positions():
+    n_rows = NO_ROWS
+    n_cols = NO_COLUMNS
+    monitor_width = 60  # monitor width in cm
+    monitor_height = 33  # monitor height in cm
+    viewing_distance = 60  # viewing distance in cm
+    stim_size = [WIDTH, HEIGHT]  # size of each stimulus in degrees
+    gap_size = [12, 12]  # gap size between stimuli in degrees
+    stim_positions = []  # array to hold stimulus positions
+
+    # Calculate stimulus positions
+    x_start = -(n_cols-1)*(stim_size[0]+gap_size[0])/2  # starting x-position
+    y_start = (n_rows-1)*(stim_size[1]+gap_size[1])/2  # starting y-position
+    for i in range(n_rows):
+        for j in range(n_cols):
+            x_pos = x_start + j*(stim_size[0]+gap_size[0])
+            y_pos = y_start - i*(stim_size[1]+gap_size[1])
+            stim_positions.append((x_pos, y_pos))
+    return x_start, y_start, stim_positions
+
+# x_start, y_start, POSITIONS = get_stimuli_positions()
 
 # window = visual.Window([1920, 1080], screen=1, color=[1,1,1],blendMode='avg', monitor="hybrid-speller-monitor", useFBO=True, units="deg", fullscr=True)
 # mywin = visual.Window(SCREEN_SIZE, color="black",monitor="Experiment Monitor" , units='norm',screen=SCREEN_NUM,fullscr=True) 
@@ -37,8 +61,10 @@ print("Refresh Rate ==>", refresh_rate)
 
 # Time conversion to frames
 epoch_frames = int(EPOCH_DURATION * refresh_rate)
+
 print("Epoch frames ==>",epoch_frames)
 cue_frames = int(CUE_DURATION * refresh_rate)   
+print("Cue frames ==>",cue_frames)
 
 
 #Presentation content
@@ -52,8 +78,12 @@ calib_text_end = "Calibration phase completed"
 cal_start = visual.TextStim(window, text=calib_text_start, color=(-1., -1., -1.))
 cal_end = visual.TextStim(window, text=calib_text_end, color=(-1., -1., -1.))
 
-targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=35)
-        for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
+if UNITS == "deg":
+    targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=0.7)
+            for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
+else:
+    targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=35)
+            for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
 
 
 wave_type = "sin"
@@ -66,7 +96,9 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
 
 block_break_text = "Block Break 1 Minutes"
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
-display_text_start = visual.TextStim(window, text="", color=(-1., -1., -1.), pos=(0,500))
+display_text_start = visual.TextStim(window, text=">", color=(-1., -1., -1.), pos=(0,450))
+# display_box = visual.Rect(window, size=[38.4,3], pos=(0,13), lineColor='black', lineWidth=2.5)
+display_box = visual.Rect(window, size=[1700,100], pos=(0,450), lineColor='black', lineWidth=2.5)
 
 def get_keypress():
     keys = event.getKeys()
@@ -88,6 +120,8 @@ def get_predicted_result(data):
     fs = 250
     num_harms = 5
     num_fbs = 5
+    # loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\rest_state\finalized_model_ECCA.sav", 'rb'))
+    # result = loaded_model.predict(data)
     result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)
     # print("Target Character found", TARGET_CHARACTERS[result])
     return TARGET_CHARACTERS[result]
@@ -96,8 +130,10 @@ def flicker(board):
     
     global frames
     global t0
+    global correct_count
+    global incorrect_count
     # For the flickering
-    
+   
     for target in sequence:
 
         board_shim.get_board_data()
@@ -113,7 +149,6 @@ def flicker(board):
         for frame in range(cue_frames):
                 cue.draw()
                 window.flip()
-                core.wait(CUE_DURATION)
 
         frames = 0
         for frame, j in enumerate(range(epoch_frames)):
@@ -129,9 +164,14 @@ def flicker(board):
         raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
         # raw.plot_psd()
         output = get_predicted_result(raw.get_data())
-        display_text_start.setText(f"Output: {output}")
+        if (output == target):
+            correct_count += 1
+        else:
+            incorrect_count +=1
+        display_text_start.text += output
         display_text_start.draw()
         window.flip()
+
         
 
 
@@ -139,6 +179,8 @@ def main():
     global sequence
     global trialClock
     global board_shim
+    global correct_count
+    global incorrect_count
 
     BoardShim.enable_dev_board_logger()
 
@@ -159,7 +201,8 @@ def main():
     logging.info('Begining the experiment')
 
     while True:
-
+        correct_count = 0
+        incorrect_count = 0
         # Starting the display
         trialClock = core.Clock()
         cal_start.draw()
@@ -169,15 +212,16 @@ def main():
 
         a.hear('A_')
         drawTextOnScreen("Please donot move now",window)
-        core.wait(7)
         sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
         
         #board start streaming
         board_shim.start_stream()
+        core.wait(7)
 
         for trials in range(NUM_TRIAL):
             get_keypress()
             # Drawing display box
+            display_box.autoDraw = True
             display_text_start.autoDraw = True
             window.flip()
 
@@ -188,12 +232,18 @@ def main():
                 # get_keypress()
             flicker(board_shim)
 
-            # At the end of the trial, calculate real duration and amount of frames
-            t1 = trialClock.getTime()  # Time at end of trial
-            elapsed = t1 - t0
-            print(f"Time elapsed: {elapsed}")
-            print(f"Total frames: {frames}")
+        # At the end of the trial, calculate real duration and amount of frames
+        t1 = trialClock.getTime()  # Time at end of trial
+        elapsed = t1 - t0
+        print(f"Time elapsed: {elapsed}")
+        print(f"Total frames: {frames}")
+        
+        acc = correct_count/(correct_count + incorrect_count)
+        print("correct count", correct_count)
+        print("incorrect count", incorrect_count)
+        print("Accuracy ==>", acc)
 
+        display_box.autoDraw = False
         display_text_start.autoDraw = False
         window.flip()
         for target in targets.values():

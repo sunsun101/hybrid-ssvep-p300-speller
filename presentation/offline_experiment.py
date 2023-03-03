@@ -3,7 +3,7 @@ import os
 path = os.path.dirname(os.path.dirname(__file__)) 
 sys.path.append(path)
 
-from psychopy import visual, core, event #import some libraries from PsychoPy
+from psychopy import visual, core, event, monitors #import some libraries from PsychoPy
 import platform
 from utils.gui import get_screen_settings, CheckerBoard
 import argparse
@@ -24,13 +24,36 @@ from utils.speller_config import *
 
 a = beeps(800)
 
+
 # Window parameters
 system = platform.system()
 width, height = get_screen_settings(system)
 
 #create a window
-window = visual.Window([width, height], screen=1, color=[1,1,1],blendMode='avg', useFBO=True, units="pix", fullscr=True)
+window = visual.Window([width, height], screen=1, color=[1,1,1],blendMode='avg', useFBO=True, units="deg", monitor="speller")
 
+def get_stimuli_positions():
+    n_rows = 5  # number of rows
+    n_cols = 9  # number of columns
+    monitor_width = 60  # monitor width in cm
+    monitor_height = 33  # monitor height in cm
+    viewing_distance = 60  # viewing distance in cm
+    stim_size = [1.78, 1.49]  # size of each stimulus in degrees
+    gap_size = [3, 3]  # gap size between stimuli in degrees
+    stim_positions = []  # array to hold stimulus positions
+
+    # Calculate stimulus positions
+    x_start = -(n_cols-1)*(stim_size[0]+gap_size[0])/2  # starting x-position
+    y_start = (n_rows-1)*(stim_size[1]+gap_size[1])/2  # starting y-position
+    for i in range(n_rows):
+        for j in range(n_cols):
+            x_pos = x_start + j*(stim_size[0]+gap_size[0])
+            y_pos = y_start - i*(stim_size[1]+gap_size[1])
+            stim_positions.append((x_pos, y_pos))
+    return stim_positions
+
+POSITIONS = get_stimuli_positions()
+print("Here are the stimuli positions", POSITIONS)
 # window = visual.Window([1920, 1080], screen=1, color=[1,1,1],blendMode='avg', monitor="hybrid-speller-monitor", useFBO=True, units="deg", fullscr=True)
 # mywin = visual.Window(SCREEN_SIZE, color="black",monitor="Experiment Monitor" , units='norm',screen=SCREEN_NUM,fullscr=True) 
 refresh_rate = round(window.getActualFrameRate())
@@ -45,7 +68,7 @@ cue_frames = int(CUE_DURATION * refresh_rate)
 
 #Presentation content
 
-cue = visual.Rect(window, width=100, height=80, pos=[0, 0], lineWidth=3, lineColor='red')
+cue = visual.Rect(window, width=WIDTH, height=HEIGHT, pos=[0, 0], lineWidth=3, lineColor='red')
 
 calib_text_start = "Starting callibration phase.Please avoid moving or blinking.\n\
 You may blink when shifting your gaze.Focus your target on the characters presented with red cue."
@@ -54,7 +77,11 @@ calib_text_end = "Calibration phase completed"
 cal_start = visual.TextStim(window, text=calib_text_start, color=(-1., -1., -1.))
 cal_end = visual.TextStim(window, text=calib_text_end, color=(-1., -1., -1.))
 
-targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=35)
+if UNITS = "deg":
+    targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=0.7)
+            for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
+else:
+    targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=35)
         for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
 
 
@@ -64,13 +91,25 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
                                     base_pos=pos)
             for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
 
-hori_divider = visual.Line(window, start=[-850,-75], end=[850,-75], lineColor='black')
-ver_divider_1 = visual.Line(window, start=[-300,350], end=[-300,-350], lineColor='black')
-ver_divider_2 = visual.Line(window, start=[300, 350], end=[300,-350], lineColor='black')
-display_box = visual.Rect(window, size=[1700,100], pos=(0,450), lineColor='black', lineWidth=2.5)
+# hori_divider = visual.Line(window, start=[-850,-75], end=[850,-75], lineColor='black')
+# ver_divider_1 = visual.Line(window, start=[-300,350], end=[-300,-350], lineColor='black')
+# ver_divider_2 = visual.Line(window, start=[300, 350], end=[300,-350], lineColor='black')
+# display_box = visual.Rect(window, size=[1700,100], pos=(0,450), lineColor='black', lineWidth=2.5)
+
+# hori_divider = visual.Line(window, start=[-23.12,-2.7], end=[23.12,-2.7], lineColor='black')
+# ver_divider_1 = visual.Line(window, start=[-8.67,10.98], end=[-8.67, -10.98], lineColor='black')
+# ver_divider_2 = visual.Line(window, start=[8.67,10.98], end=[8.67, -10.98], lineColor='black')
+# display_box = visual.Rect(window, size=[1700,100], pos=(0,450), lineColor='black', lineWidth=2.5)
+
+hori_divider = visual.Line(window, start=[-19.12,-2.7], end=[19.12,-2.7], lineColor='black')
+ver_divider_1 = visual.Line(window, start=[-7.71,10.98], end=[-7.71, -10.98], lineColor='black')
+ver_divider_2 = visual.Line(window, start=[7.71,10.98], end=[7.71, -10.98], lineColor='black')
+# display_box = visual.Rect(window, size=[38.4,3], pos=(0,13), lineColor='black', lineWidth=2.5)
 
 block_break_text = "Block Break 1 Minutes"
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
+
+
 
 def get_keypress():
     keys = event.getKeys()
@@ -196,7 +235,7 @@ def main():
             
             get_keypress()
             # Drawing display box
-            display_box.autoDraw = True
+            # display_box.autoDraw = True
             # Drawing the grid
             hori_divider.autoDraw = True
             ver_divider_1.autoDraw = True
@@ -218,18 +257,14 @@ def main():
             # saving the data from 1 block
             block_name = f'{PARTICIPANT_ID}{block}'
             data = board_shim.get_board_data()
-            print("WHAT IS IN DATA")
-            print(data)
             data_copy = data.copy()
             raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
-            print("WHAT IS IN RAW")
-            print(raw)
             save_raw(raw,block_name,RECORDING_DIR)
 
         
             #giving block break
             # clearing the screen
-            display_box.autoDraw = False
+            # display_box.autoDraw = False
             hori_divider.autoDraw = False
             ver_divider_1.autoDraw = False
             ver_divider_2.autoDraw = False

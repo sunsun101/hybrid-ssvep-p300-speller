@@ -49,7 +49,7 @@ def main():
 
     BoardShim.enable_dev_board_logger()
     drawTextOnScreen('Begining the experiment',window)
-    core.wait(7)
+    
     #brainflow initialization 
     params = BrainFlowInputParams()
     # params.serial_port = serial_port
@@ -65,7 +65,7 @@ def main():
         sys.exit()
     #board start streaming
     board_shim.start_stream()
-
+    core.wait(7)
     logging.info('Begining the experiment')
 
     while True:
