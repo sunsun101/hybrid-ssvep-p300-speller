@@ -28,7 +28,7 @@ system = platform.system()
 width, height = get_screen_settings(system)
 
 #create a window
-window = visual.Window([width, height], screen=1, color=[1,1,1],blendMode='avg', useFBO=True, units="pix", fullscr=True)
+window = visual.Window([width, height], screen=1, color=[1,1,1],blendMode='avg', useFBO=True, units="deg", fullscr=True)
 
 # window = visual.Window([1920, 1080], screen=1, color=[1,1,1],blendMode='avg', monitor="hybrid-speller-monitor", useFBO=True, units="deg", fullscr=True)
 # mywin = visual.Window(SCREEN_SIZE, color="black",monitor="Experiment Monitor" , units='norm',screen=SCREEN_NUM,fullscr=True) 
@@ -122,7 +122,7 @@ def flicker(board):
         target_pos = (target_flicker.base_x, target_flicker.base_y)
         target_freq = target_flicker.freq
         target_phase = target_flicker.phase
-        marker = markers[str(target)]
+        marker = MARKERS[str(target)]
 
 
         t0 = trialClock.getTime()  # Retrieve time at start of cue presentation
@@ -135,7 +135,7 @@ def flicker(board):
         frames = 0
         #flicker random sequence of each speller parallely
         # runInParallel(flicker_subspeller(randomized_subspeller[1]), flicker_subspeller(randomized_subspeller[2]), flicker_subspeller(randomized_subspeller[3]),flicker_subspeller(randomized_subspeller[4]))
-        eegMarking(board, markers['trial_start'])
+        eegMarking(board, MARKERS['trial_start'])
         
         # IDEA
         # Generating an entire epoch of frames

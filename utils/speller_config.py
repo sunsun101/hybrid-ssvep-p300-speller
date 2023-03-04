@@ -49,7 +49,7 @@ TARGET_CHARACTERS:list = ["A", "B", "C", "J", "K", "L", "S", "T", "U",
                       "G", "H", "I", "P", "Q", "R", "Y", "Z", "0",
                       "1", "2", "3", "7", "8", "9", "(", "Space",")",
                       "4", "5", "6", ".", "?", ",", "!", "-", "<<"]
-# TARGET_CHARACTERS:list = ["A", "B", "C", "J", "K", "L", "S", "T", "U"]
+TARGET_CHARACTERS:list = ["A", "B", "C", "J", "K", "L", "S", "T", "U"]
 
 # TARGET_CHARACTERS:list = ["A", "B", "C"]
 # TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F"]
