@@ -104,3 +104,23 @@ def drawTextOnScreen(message,window) :
     message = visual.TextStim(window, text=message, color=(-1., -1., -1.))
     message.draw() # draw on screen
     window.flip()   # refresh to show what we have draw
+
+# def get_stimuli_positions():
+#     n_rows = NO_ROWS
+#     n_cols = NO_COLUMNS
+#     monitor_width = 60  # monitor width in cm
+#     monitor_height = 33  # monitor height in cm
+#     viewing_distance = 60  # viewing distance in cm
+#     stim_size = [WIDTH, HEIGHT]  # size of each stimulus in degrees
+#     gap_size = [12, 12]  # gap size between stimuli in degrees
+#     stim_positions = []  # array to hold stimulus positions
+
+#     # Calculate stimulus positions
+#     x_start = -(n_cols-1)*(stim_size[0]+gap_size[0])/2  # starting x-position
+#     y_start = (n_rows-1)*(stim_size[1]+gap_size[1])/2  # starting y-position
+#     for i in range(n_rows):
+#         for j in range(n_cols):
+#             x_pos = x_start + j*(stim_size[0]+gap_size[0])
+#             y_pos = y_start - i*(stim_size[1]+gap_size[1])
+#             stim_positions.append((x_pos, y_pos))
+#     return x_start, y_start, stim_positions

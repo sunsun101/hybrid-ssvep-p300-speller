@@ -1,24 +1,27 @@
-import sys
 import os
+import sys
+
 path = os.path.dirname(os.path.dirname(__file__)) 
 sys.path.append(path)
 
-from psychopy import visual, core, event #import some libraries from PsychoPy
-import platform
-from utils.gui import get_screen_settings, CheckerBoard
 import argparse
 import json
-import numpy as np
-import random
-from multiprocessing import Process
-import multiprocessing
-import threading
-import brainflow
-from brainflow.board_shim import BoardShim, BrainFlowInputParams
-import time
 import logging
-from utils.common import getdata, save_raw, drawTextOnScreen
+import multiprocessing
+import platform
+import random
+import threading
+import time
+from multiprocessing import Process
+
+import brainflow
+import numpy as np
 from beeply.notes import *
+from brainflow.board_shim import BoardShim, BrainFlowInputParams
+from psychopy import core, event, visual  # import some libraries from PsychoPy
+
+from utils.common import drawTextOnScreen, getdata, save_raw
+from utils.gui import CheckerBoard, get_screen_settings
 from utils.speller_config import *
 
 a = beeps(800)
@@ -53,7 +56,7 @@ calib_text_end = "Calibration phase completed"
 cal_start = visual.TextStim(window, text=calib_text_start, color=(-1., -1., -1.))
 cal_end = visual.TextStim(window, text=calib_text_end, color=(-1., -1., -1.))
 
-targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=35)
+targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=HEIGHT_OF_TARGET)
         for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
 
 
@@ -63,10 +66,10 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
                                     base_pos=pos)
             for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
 
-hori_divider = visual.Line(window, start=[-850,-75], end=[850,-75], lineColor='black')
-ver_divider_1 = visual.Line(window, start=[-300,350], end=[-300,-350], lineColor='black')
-ver_divider_2 = visual.Line(window, start=[300, 350], end=[300,-350], lineColor='black')
-display_box = visual.Rect(window, size=[1700,100], pos=(0,450), lineColor='black', lineWidth=2.5)
+hori_divider = visual.Line(window, start=HORI_DIVIDER_START, end=HORI_DIVIDER_END, lineColor='black')
+ver_divider_1 = visual.Line(window, start=VER_DIVIDER_1_START, end=VER_DIVIDER_1_END, lineColor='black')
+ver_divider_2 = visual.Line(window, start=VER_DIVIDER_2_START, end=VER_DIVIDER_2_END, lineColor='black')
+display_box = visual.Rect(window, size=DISPLAY_BOX_SIZE, pos=DISPLAY_BOX_POS, lineColor='black', lineWidth=2.5)
 
 block_break_text = "Block Break 1 Minutes"
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
@@ -192,8 +195,8 @@ def gen_timeline_subspeller(m:int, overlap:float, isShuffle:bool=False):
     # 0.5: 2 stimuli overlap by half
     #   1: 2 stimuli flicker at the same time 
     import numpy as np
-    # import random
 
+    # import random
     # characters = list(range(m))
     # if(isShuffle):
     #     random.shuffle(characters)
@@ -256,7 +259,7 @@ def main():
             a.hear('A_')
             drawTextOnScreen('Starting block ' + str(block + 1) + ".Please donot move now",window)
             core.wait(7)
-            sequence = random.sample(TARGET_CHARACTERS, 45)
+            sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
             #randomize the characters of the sub speller. returns a dictionary of randomized characters in each sub speller. {1: ['S', 'L', 'U', 'J', 'T', 'K', 'C', 'B', 'A'], 2: ['F', 'M', 'V', 'D', 'W', 'N', 'O', 'E', 'X'], 3: ['Q', '0', 'I', 'Z', 'H', 'R', 'Y', 'P', 'G'], 4: ['2', '5', '1', '6', '4', '3'], 5: ['8', '9', '?', '7', ',', '.'], 6: ['Space', '<<', '-', '!', '(', ')']}
             randomized_subspeller = randomize_characters()
             

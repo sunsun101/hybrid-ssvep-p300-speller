@@ -1,28 +1,32 @@
-from turtle import fillcolor, pos
-from psychopy import visual, core, event #import some libraries from PsychoPy
-import platform
 import os
+import platform
 import sys
+from turtle import fillcolor, pos
+
+from psychopy import core, event, visual  # import some libraries from PsychoPy
+
 path = os.path.dirname(os.path.dirname(__file__)) 
 sys.path.append(path)
-from utils.gui import get_screen_settings, CheckerBoard
 import argparse
 import json
-import numpy as np
-import random
-from multiprocessing import Process
-import multiprocessing
-import threading
-import brainflow
-from brainflow.board_shim import BoardShim, BrainFlowInputParams
-import time
 import logging
-from utils.common import getdata, save_raw, drawTextOnScreen
-from beeply.notes import *
-from utils.speller_config import *
-from fbcca import fbcca_realtime
+import multiprocessing
 import pickle
+import random
+import threading
+import time
+from multiprocessing import Process
+
+import brainflow
+import numpy as np
+from beeply.notes import *
+from brainflow.board_shim import BoardShim, BrainFlowInputParams
+from fbcca import fbcca_realtime
+
 from models.cca import ECCA
+from utils.common import drawTextOnScreen, getdata, save_raw
+from utils.gui import CheckerBoard, get_screen_settings
+from utils.speller_config import *
 
 a = beeps(800)
 # Window parameters
@@ -31,28 +35,6 @@ width, height = get_screen_settings(system)
 
 #create a window
 window = visual.Window([width, height], screen=1, color=[1,1,1],blendMode='avg', useFBO=True, units=UNITS, monitor="speller")
-
-def get_stimuli_positions():
-    n_rows = NO_ROWS
-    n_cols = NO_COLUMNS
-    monitor_width = 60  # monitor width in cm
-    monitor_height = 33  # monitor height in cm
-    viewing_distance = 60  # viewing distance in cm
-    stim_size = [WIDTH, HEIGHT]  # size of each stimulus in degrees
-    gap_size = [12, 12]  # gap size between stimuli in degrees
-    stim_positions = []  # array to hold stimulus positions
-
-    # Calculate stimulus positions
-    x_start = -(n_cols-1)*(stim_size[0]+gap_size[0])/2  # starting x-position
-    y_start = (n_rows-1)*(stim_size[1]+gap_size[1])/2  # starting y-position
-    for i in range(n_rows):
-        for j in range(n_cols):
-            x_pos = x_start + j*(stim_size[0]+gap_size[0])
-            y_pos = y_start - i*(stim_size[1]+gap_size[1])
-            stim_positions.append((x_pos, y_pos))
-    return x_start, y_start, stim_positions
-
-# x_start, y_start, POSITIONS = get_stimuli_positions()
 
 # window = visual.Window([1920, 1080], screen=1, color=[1,1,1],blendMode='avg', monitor="hybrid-speller-monitor", useFBO=True, units="deg", fullscr=True)
 # mywin = visual.Window(SCREEN_SIZE, color="black",monitor="Experiment Monitor" , units='norm',screen=SCREEN_NUM,fullscr=True) 
@@ -78,13 +60,9 @@ calib_text_end = "Calibration phase completed"
 cal_start = visual.TextStim(window, text=calib_text_start, color=(-1., -1., -1.))
 cal_end = visual.TextStim(window, text=calib_text_end, color=(-1., -1., -1.))
 
-if UNITS == "deg":
-    targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=0.7)
-            for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
-else:
-    targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=35)
-            for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
 
+targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=HEIGHT_OF_TARGET)
+            for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
 
 wave_type = "sin"
 
@@ -96,9 +74,8 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
 
 block_break_text = "Block Break 1 Minutes"
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
-display_text_start = visual.TextStim(window, text=">", color=(-1., -1., -1.), pos=(0,450))
-# display_box = visual.Rect(window, size=[38.4,3], pos=(0,13), lineColor='black', lineWidth=2.5)
-display_box = visual.Rect(window, size=[1700,100], pos=(0,450), lineColor='black', lineWidth=2.5)
+display_text_start = visual.TextStim(window, text=">", color=(-1., -1., -1.), pos=DISPLAY_BOX_POS)
+display_box = visual.Rect(window, size=DISPLAY_BOX_SIZE, pos=DISPLAY_BOX_POS, lineColor='black', lineWidth=2.5)
 
 def get_keypress():
     keys = event.getKeys()
@@ -147,8 +124,8 @@ def flicker(board):
         #Display the cue
         cue.pos = target_pos
         for frame in range(cue_frames):
-                cue.draw()
-                window.flip()
+            cue.draw()
+            window.flip()
 
         frames = 0
         for frame, j in enumerate(range(epoch_frames)):
