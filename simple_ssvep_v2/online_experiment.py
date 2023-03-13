@@ -27,6 +27,7 @@ from models.cca import ECCA
 from utils.common import drawTextOnScreen, getdata, save_raw
 from utils.gui import CheckerBoard, get_screen_settings
 from utils.speller_config import *
+from realtime_plot import Graph
 
 a = beeps(800)
 # Window parameters
@@ -70,6 +71,9 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
                                     wave_type=wave_type, duration=EPOCH_DURATION, fps=refresh_rate,
                                     base_pos=pos)
             for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
+
+# for _,flicker in flickers.items():
+#     flicker.wave_func += -1 * 0.2 
 
 
 block_break_text = "Block Break 1 Minutes"
@@ -184,7 +188,7 @@ def main():
         trialClock = core.Clock()
         cal_start.draw()
         window.flip()
-        core.wait(6)
+        core.wait(3)
 
 
         a.hear('A_')
@@ -193,7 +197,8 @@ def main():
         
         #board start streaming
         board_shim.start_stream()
-        core.wait(7)
+        core.wait(10)
+        Graph(board_shim)
 
         for trials in range(NUM_TRIAL):
             get_keypress()

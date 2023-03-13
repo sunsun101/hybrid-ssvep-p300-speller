@@ -42,7 +42,7 @@ cue_frames = int(CUE_DURATION * refresh_rate)
 
 #Presentation content
 
-cue = visual.Rect(window, width=220, height=200, pos=[0, 0], lineWidth=3, lineColor='red')
+cue = visual.Rect(window, width=WIDTH, height=HEIGHT, pos=[0, 0], lineWidth=3, lineColor='red')
 
 calib_text_start = "Starting callibration phase.Please avoid moving or blinking.\n\
 You may blink when shifting your gaze.Focus your target on the characters presented with red cue."
@@ -144,12 +144,13 @@ def main():
         trialClock = core.Clock()
         cal_start.draw()
         window.flip()
-        core.wait(6)
+        core.wait(3)
 
         for block in range(NUM_BLOCK):
             a.hear('A_')
             drawTextOnScreen('Starting block ' + str(block + 1) + ".Please donot move now",window)
-            core.wait(7)
+            #Adding buffer of 10 sec at the end
+            core.wait(10)
             sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
 
             for trials in range(NUM_TRIAL):
@@ -169,7 +170,13 @@ def main():
                 elapsed = t1 - t0
                 print(f"Time elapsed: {elapsed}")
                 print(f"Total frames: {frames}")
-
+            
+            #Clearing the characters on screen
+            for target in targets.values():
+                target.autoDraw = False
+            drawTextOnScreen('Block Complete',window)
+            #Adding buffer of 10 sec at the end
+            core.wait(10)
             # saving the data from 1 block
             block_name = f'{PARTICIPANT_ID}{block}'
             data = board_shim.get_board_data()
