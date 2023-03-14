@@ -101,9 +101,9 @@ def get_predicted_result(data):
     fs = 250
     num_harms = 5
     num_fbs = 5
-    # loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\rest_state\finalized_model_ECCA.sav", 'rb'))
-    # result = loaded_model.predict(data)
-    result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)
+    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\rest_state\finalized_model_ECCA.sav", 'rb'))
+    result = loaded_model.predict(data)
+    # result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)
     # print("Target Character found", TARGET_CHARACTERS[result])
     return TARGET_CHARACTERS[result]
 
@@ -198,7 +198,7 @@ def main():
         #board start streaming
         board_shim.start_stream()
         core.wait(10)
-        Graph(board_shim)
+        # Graph(board_shim)
 
         for trials in range(NUM_TRIAL):
             get_keypress()
