@@ -31,9 +31,9 @@ DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
 NUM_BLOCK: int = 5
-NUM_TRIAL: int = 1
+NUM_TRIAL: int = 5
 NUM_SESSION: int = 3
-EPOCH_DURATION: float = 2
+EPOCH_DURATION: float = 3
 ITI_DURATION: float = 0.1
 CUE_DURATION: float = 0.7
 NO_SUBSPELLER: int = 6
@@ -45,9 +45,9 @@ NO_SUBSPELLER: int = 6
 
 # FREQS: list = [6 , 10 , 15]
 # FREQS: list = [8 , 8, 10 , 10, 13, 13]
-# FREQS: list = [8, 8.2, 8.4, 8.6, 8.8, 9, 9.2, 9.4, 9.6]
+FREQS: list = [8, 8.2, 8.4, 8.6, 8.8, 9, 9.2, 9.4, 9.6]
 # FREQS: list = [2,2,2,4,4,4,6,6,6]
-FREQS: list = [12,12.2,12.4, 12.6,12.8,13, 13.2, 13.4,13.6]
+# FREQS: list = [12,12.2,12.4, 12.6,12.8,13, 13.2, 13.4,13.6]
 # FREQS: list = [8, 9, 10, 11, 12, 13, 14, 15, 16, 8.2, 9.2, 10.2, 11.2, 12.2, 13.2, 14.2, 15.2, 16.2, 8.4, 9.4, 10.4, 11.4, 12.4, 13.4, 14.4, 15.4, 16.4, 8.6, 9.6, 10.6, 11.6, 12.6, 13.6, 14.6, 15.6, 16.6, 8.8, 9.8, 10.8, 11.8, 12.8, 13.8, 14.8, 15.8, 16.8]
 
 # POSITIONS: list = [[-800, 300], [-600, 300], [-400, 300], [-200, 300], [0, 300], [200, 300], [400, 300], [600, 300], [800, 300],
@@ -91,7 +91,7 @@ SUBSPELLERS:dict = {"1": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
                     "5": ["7", "8", "9", ".", "?", ","],
                     "6": ["(", "Space", ")", "!", "-", "<<"]}
 SERIAL_PORT:str = "COM3"
-BOARD_ID:int = -1
+BOARD_ID:int = 8
 PARTICIPANT_ID:str = "sunsun_9_flicker_test"
 RECORDING_DIR:str = "simple_ssvep_v2/record"
 TYPE_OF_FILE:str = ".fif"

@@ -102,12 +102,12 @@ def get_predicted_result(data):
     fs = 250
     num_harms = 5
     num_fbs = 5
-    loaded_model = pickle.load(open(r"E:\Thesis\HybridSpeller\simple_ssvep_v2\TRCA_model.sav", 'rb'))
-    result = loaded_model.predict(data)
-    print("Here is the result", result[0])
-    # result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)
-    # print("Target Character found", TARGET_CHARACTERS[result])
-    # return TARGET_CHARACTERS[result]
+    # loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\simple_ssvep_v2\TRCA_model.sav", 'rb'))
+    # result = loaded_model.predict(data)
+    # print("Here is the result", result[0])
+    result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)
+    print("Target Character found", TARGET_CHARACTERS[result])
+    return TARGET_CHARACTERS[result]
     
     return list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0]
 
@@ -148,7 +148,8 @@ def flicker(board):
         data_copy = data.copy()
         raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
         # raw.plot_psd()
-        output = get_predicted_result(raw.get_data()[:-9,:675])
+        output = get_predicted_result(raw.get_data())
+        # output = get_predicted_result(raw.get_data()[:-1,:675])
         if (output == target):
             correct_count += 1
         else:
@@ -236,7 +237,7 @@ def main():
             target.autoDraw = False
      
         drawTextOnScreen('End of experiment, Thank you',window)
-        core.wait(3)
+        core.wait(10)
         break
 
 
