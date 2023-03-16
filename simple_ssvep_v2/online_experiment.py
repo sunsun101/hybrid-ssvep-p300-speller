@@ -28,6 +28,7 @@ from utils.common import drawTextOnScreen, getdata, save_raw
 from utils.gui import CheckerBoard, get_screen_settings
 from utils.speller_config import *
 from realtime_plot import Graph
+from models.trca import TRCA
 
 a = beeps(800)
 # Window parameters
@@ -101,11 +102,14 @@ def get_predicted_result(data):
     fs = 250
     num_harms = 5
     num_fbs = 5
-    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\rest_state\finalized_model_ECCA.sav", 'rb'))
+    loaded_model = pickle.load(open(r"E:\Thesis\HybridSpeller\simple_ssvep_v2\TRCA_model.sav", 'rb'))
     result = loaded_model.predict(data)
+    print("Here is the result", result[0])
     # result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)
     # print("Target Character found", TARGET_CHARACTERS[result])
-    return TARGET_CHARACTERS[result]
+    # return TARGET_CHARACTERS[result]
+    
+    return list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0]
 
 def flicker(board):
     
@@ -144,7 +148,7 @@ def flicker(board):
         data_copy = data.copy()
         raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
         # raw.plot_psd()
-        output = get_predicted_result(raw.get_data())
+        output = get_predicted_result(raw.get_data()[:-9,:675])
         if (output == target):
             correct_count += 1
         else:

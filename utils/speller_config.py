@@ -91,7 +91,7 @@ SUBSPELLERS:dict = {"1": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
                     "5": ["7", "8", "9", ".", "?", ","],
                     "6": ["(", "Space", ")", "!", "-", "<<"]}
 SERIAL_PORT:str = "COM3"
-BOARD_ID:int = 8
+BOARD_ID:int = -1
 PARTICIPANT_ID:str = "sunsun_9_flicker_test"
 RECORDING_DIR:str = "simple_ssvep_v2/record"
 TYPE_OF_FILE:str = ".fif"
