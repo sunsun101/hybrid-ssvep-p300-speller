@@ -17,9 +17,9 @@ import brainflow
 from brainflow.board_shim import BoardShim, BrainFlowInputParams
 import time
 import logging
-from utils.common import getdata, save_raw, drawTextOnScreen
+from utils.common import getdata_offline, save_raw, drawTextOnScreen
 from beeply.notes import *
-from utils.speller_config import *
+from utils.speller_config_9_flicker import *
 
 a = beeps(800)
 # Window parameters
@@ -181,7 +181,7 @@ def main():
             block_name = f'{PARTICIPANT_ID}{block}'
             data = board_shim.get_board_data()
             data_copy = data.copy()
-            raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
+            raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
             save_raw(raw,block_name,RECORDING_DIR)
 
             for target in targets.values():

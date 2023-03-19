@@ -1,3 +1,6 @@
+								 
+																			 
+			   
 import os
 import platform
 import sys
@@ -7,13 +10,18 @@ from psychopy import core, event, visual  # import some libraries from PsychoPy
 
 path = os.path.dirname(os.path.dirname(__file__)) 
 sys.path.append(path)
+													   
 import argparse
 import json
 import logging
+			 
+								   
 import multiprocessing
 import pickle
 import random
 import threading
+				
+																
 import time
 from multiprocessing import Process
 
@@ -26,7 +34,7 @@ from fbcca import fbcca_realtime
 from models.cca import ECCA
 from utils.common import drawTextOnScreen, getdata, save_raw
 from utils.gui import CheckerBoard, get_screen_settings
-from utils.speller_config import *
+from utils.speller_config_9_flicker import *
 from realtime_plot import Graph
 from models.trca import TRCA
 
@@ -36,7 +44,7 @@ system = platform.system()
 width, height = get_screen_settings(system)
 
 #create a window
-window = visual.Window([width, height], screen=1, color=[1,1,1],blendMode='avg', useFBO=True, units=UNITS, monitor="speller")
+window = visual.Window([width, height], screen=1, color=[1,1,1],blendMode='avg', useFBO=True, units="pix", fullscr=True)
 
 # window = visual.Window([1920, 1080], screen=1, color=[1,1,1],blendMode='avg', monitor="hybrid-speller-monitor", useFBO=True, units="deg", fullscr=True)
 # mywin = visual.Window(SCREEN_SIZE, color="black",monitor="Experiment Monitor" , units='norm',screen=SCREEN_NUM,fullscr=True) 
@@ -62,6 +70,8 @@ calib_text_end = "Calibration phase completed"
 cal_start = visual.TextStim(window, text=calib_text_start, color=(-1., -1., -1.))
 cal_end = visual.TextStim(window, text=calib_text_end, color=(-1., -1., -1.))
 
+																										   
+															 
 
 targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=HEIGHT_OF_TARGET)
             for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
@@ -109,7 +119,7 @@ def get_predicted_result(data):
     print("Target Character found", TARGET_CHARACTERS[result])
     return TARGET_CHARACTERS[result]
     
-    return list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0]
+    # return list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0]
 
 def flicker(board):
     
@@ -121,7 +131,6 @@ def flicker(board):
    
     for target in sequence:
 
-        board_shim.get_board_data()
         get_keypress()
         target_flicker = flickers[str(target)]
         target_pos = (target_flicker.base_x, target_flicker.base_y)
@@ -135,6 +144,8 @@ def flicker(board):
             cue.draw()
             window.flip()
 
+        board_shim.get_board_data()
+        core.wait(1)
         frames = 0
         for frame, j in enumerate(range(epoch_frames)):
             get_keypress()
@@ -143,13 +154,15 @@ def flicker(board):
             frames += 1
             window.flip()
         # predicting the output
-
+        core.wait(1)
         data = board_shim.get_board_data()
         data_copy = data.copy()
         raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
         # raw.plot_psd()
         output = get_predicted_result(raw.get_data())
-        # output = get_predicted_result(raw.get_data()[:-1,:675])
+        save_raw(raw,str(trialClock.getTime())+target,RECORDING_DIR)
+        print(raw.get_data()[:,:675].shape)
+        # output = get_predicted_result(raw.get_data()[:,:675])
         if (output == target):
             correct_count += 1
         else:
@@ -198,6 +211,7 @@ def main():
 
         a.hear('A_')
         drawTextOnScreen("Please donot move now",window)
+					
         sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
         
         #board start streaming

@@ -21,7 +21,7 @@ from brainflow.board_shim import BoardShim, BrainFlowInputParams
 from psychopy import (core, event,  # import some libraries from PsychoPy
                       monitors, visual)
 
-from utils.common import drawTextOnScreen, getdata, save_raw
+from utils.common import drawTextOnScreen, getdata_offline, save_raw
 from utils.gui import CheckerBoard, get_screen_settings
 from utils.speller_config import *
 
@@ -226,7 +226,7 @@ def main():
             block_name = f'{PARTICIPANT_ID}{block}'
             data = board_shim.get_board_data()
             data_copy = data.copy()
-            raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
+            raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
             save_raw(raw,block_name,RECORDING_DIR)
 
         
