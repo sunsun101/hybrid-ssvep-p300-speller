@@ -182,7 +182,7 @@ def main():
             data = board_shim.get_board_data()
             data_copy = data.copy()
             raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
-            save_raw(raw,block_name,RECORDING_DIR)
+            save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
 
             for target in targets.values():
                 target.autoDraw = False
