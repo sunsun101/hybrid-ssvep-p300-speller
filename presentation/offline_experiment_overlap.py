@@ -293,7 +293,7 @@ def main():
             raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
             print("WHAT IS IN RAW")
             print(raw)
-            save_raw(raw,block_name,RECORDING_DIR)
+            save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
 
         
             #giving block break

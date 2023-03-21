@@ -129,10 +129,10 @@ def getdata_offline(data,board,clear_buffer=False,n_samples=None,dropEnable = Fa
 
     return raw_data
 
-def save_raw(raw, name,dir):
+def save_raw(raw, name,dir, participant_id):
     print("RAW is here")
     print(raw)
-    folder_path = create_session_folder(PARTICIPANT_ID,dir)
+    folder_path = create_session_folder(participant_id,dir)
     raw.save(os.path.join(folder_path, f'{name}{TYPE_OF_FILE}'), overwrite = True)
     return os.path.basename(folder_path)
 

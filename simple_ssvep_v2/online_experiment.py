@@ -160,7 +160,7 @@ def flicker(board):
         raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
         # raw.plot_psd()
         output = get_predicted_result(raw.get_data())
-        save_raw(raw,str(trialClock.getTime())+target,RECORDING_DIR)
+        save_raw(raw,str(trialClock.getTime())+target,RECORDING_DIR, PARTICIPANT_ID)
         print(raw.get_data()[:,:675].shape)
         # output = get_predicted_result(raw.get_data()[:,:675])
         if (output == target):
