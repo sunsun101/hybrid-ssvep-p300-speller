@@ -5,7 +5,7 @@ matplotlib.use('TkAgg')
 
 # fname = "record\\wan\\wan1.fif"
 # fname = "record\\first_recording\\first_recording2.fif"
-fname = r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\simple_ssvep_v2\record\sunsun_20230319_test\sunsun_20230319_test0.fif"
+fname = r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\wang_experiment\record\sunsun_20230330_online\sunsun_20230330_online.fif"
 raw = mne.io.read_raw_fif(fname, preload = True)
 raw.filter(l_freq=1, h_freq=None)
 # raw.notch_filter(freqs=[50,100])

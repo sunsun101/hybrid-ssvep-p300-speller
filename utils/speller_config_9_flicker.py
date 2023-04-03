@@ -31,22 +31,25 @@ DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
 NUM_BLOCK: int = 5
-NUM_TRIAL: int = 1
+NUM_TRIAL: int = 5
 NUM_SESSION: int = 3
-EPOCH_DURATION: float = 3
+EPOCH_DURATION: float = 5
 ITI_DURATION: float = 0.1
 CUE_DURATION: float = 0.7
 NO_SUBSPELLER: int = 6
 
 FREQS: list = [8, 8.2, 8.4, 8.6, 8.8, 9, 9.2, 9.4, 9.6]
+# FREQS: list = [8,9,10,11,12,13,14,15,16]
 
 POSITIONS: list = [(-800, 300), (0, 300), (800, 300), (-800, 0), (0,0), (800, 0), (-800, -300), (0, -300), (800, -300)]
 
 AMPLITUDE: float = 1.0
 
 PHASES: list = [0 , 0.35 , 0.70 , 1.05 , 1.40 , 1.75, 0.10, 0.45, 0.80 ]
+# PHASES:list = [0, 0.5, 1, 1.5, 0, 0.5, 1, 1.5,0]
 
-TARGET_CHARACTERS:list = ["A", "B", "C", "J", "K", "L", "S", "T", "U"]
+# TARGET_CHARACTERS:list = ["A", "B", "C", "J", "K", "L", "S", "T", "U"]
+TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
 
 SUBSPELLERS:dict = {"1": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
                     "2": ["J", "K", "L", "M", "N", "O", "P", "Q", "R"],

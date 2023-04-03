@@ -149,8 +149,9 @@ def flicker(board):
         frames = 0
         for frame, j in enumerate(range(epoch_frames)):
             get_keypress()
-            for flicker in flickers.values():
-                flicker.draw2(frame = frame)
+            # for flicker in flickers.values():
+            #     flicker.draw2(frame = frame)
+            target_flicker.draw2(frame = frame)
             frames += 1
             window.flip()
         # predicting the output
