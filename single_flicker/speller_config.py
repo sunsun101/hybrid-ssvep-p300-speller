@@ -18,8 +18,8 @@ PHASES:list = [0]
 TARGET_CHARACTERS:list = ["A"]
 
 SERIAL_PORT:str = "COM3"
-BOARD_ID:int = -1
-PARTICIPANT_ID:str = "sunsun_20230411"
+BOARD_ID:int = 8
+PARTICIPANT_ID:str = "sunsun_20230411_v1"
 RECORDING_DIR:str = "single_flicker/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
