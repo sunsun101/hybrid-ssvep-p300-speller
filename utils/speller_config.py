@@ -16,8 +16,8 @@
 # DISPLAY_BOX_POS = (0,13)
 
 #Configuration for units=pix
-HEIGHT: int = 100
-WIDTH: int = 100
+HEIGHT: int = 500
+WIDTH: int = 500
 UNITS = "pix"
 HEIGHT_OF_TARGET = 35
 HORI_DIVIDER_START = [-850,-75]
