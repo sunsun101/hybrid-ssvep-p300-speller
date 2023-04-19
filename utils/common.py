@@ -9,6 +9,7 @@ import json
 from psychopy import visual
 import numpy as np
 from utils.speller_config import *
+import pickle
 
 def create_session_folder(subj,dir):
     base_path = os.getcwd() + "\\"
@@ -174,3 +175,10 @@ def drawTextOnScreen(message,window) :
 #             y_pos = y_start - i*(stim_size[1]+gap_size[1])
 #             stim_positions.append((x_pos, y_pos))
 #     return x_start, y_start, stim_positions
+
+def save_csv(data, dir, participant_id):
+
+    folder_path = create_session_folder(participant_id,dir)
+    filename = os.path.join(folder_path, f'{participant_id}')
+    with open(filename + '.pickle', 'wb') as handle:
+        pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)

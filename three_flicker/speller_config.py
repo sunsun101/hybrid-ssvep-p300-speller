@@ -32,7 +32,7 @@ PHASES: list = [0 , 0 , 0]
 TARGET_CHARACTERS:list = ["A", "B", "C"]
 
 SERIAL_PORT:str = "COM3"
-BOARD_ID:int = 8
+BOARD_ID:int = -1
 PARTICIPANT_ID:str = "sunsun_20230419"
 RECORDING_DIR:str = "three_flicker/record"
 TYPE_OF_FILE:str = ".fif"
