@@ -14,7 +14,7 @@ DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
 NUM_BLOCK: int = 5
-NUM_TRIAL: int = 5
+NUM_TRIAL: int = 6
 NUM_SESSION: int = 3
 EPOCH_DURATION: float = 5
 ITI_DURATION: float = 0.1
@@ -33,7 +33,7 @@ TARGET_CHARACTERS:list = ["A", "B", "C"]
 
 SERIAL_PORT:str = "COM3"
 BOARD_ID:int = 8
-PARTICIPANT_ID:str = "sunsun_20230420"
+PARTICIPANT_ID:str = "sunsun_20230420_night"
 RECORDING_DIR:str = "three_flicker/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"

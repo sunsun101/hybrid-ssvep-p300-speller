@@ -110,7 +110,7 @@ def get_predicted_result(data):
     num_fbs = 5
     loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\three_flicker\TRCA_model.sav", 'rb'))
     result = loaded_model.predict(data)
-    print("Here is the result", result[0])
+    print("Here is the result", list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0])
     # result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)
     # print("Target Character found", TARGET_CHARACTERS[result])
     # return TARGET_CHARACTERS[result]
@@ -141,7 +141,7 @@ def flicker(trial):
             window.flip()
 
         board_shim.get_board_data()
-        # core.wait(1)
+        core.wait(1)
         frames = 0
         for frame, j in enumerate(range(epoch_frames)):
             get_keypress()
@@ -149,7 +149,7 @@ def flicker(trial):
             #     flicker.draw2(frame = frame)
             target_flicker.draw2(frame = frame)
             frames += 1
-            window.flip()
+            window.flip() 
         # predicting the output
         core.wait(1)
         data = board_shim.get_board_data()
@@ -158,7 +158,7 @@ def flicker(trial):
         print("Shape of the data is ==>", data.shape)
         raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
         # raw.plot_psd()
-        output = get_predicted_result(raw.get_data()[:8,250:1250])
+        output = get_predicted_result(raw.get_data()[:8,250:1500])
         save_raw(raw, str(trial)+target,RECORDING_DIR, PARTICIPANT_ID)
         # output = get_predicted_result(raw.get_data()[:,:675])
         if (output == target):
