@@ -176,9 +176,9 @@ def drawTextOnScreen(message,window) :
 #             stim_positions.append((x_pos, y_pos))
 #     return x_start, y_start, stim_positions
 
-def save_csv(data, dir, participant_id):
+def save_csv(data, name, dir, participant_id):
 
     folder_path = create_session_folder(participant_id,dir)
-    filename = os.path.join(folder_path, f'{participant_id}')
+    filename = os.path.join(folder_path, f'{name}')
     with open(filename + '.pickle', 'wb') as handle:
         pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)

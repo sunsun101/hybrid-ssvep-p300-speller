@@ -28,7 +28,7 @@ from beeply.notes import *
 from brainflow.board_shim import BoardShim, BrainFlowInputParams
 
 from models.cca import ECCA
-from utils.common import drawTextOnScreen, getdata, save_raw
+from utils.common import drawTextOnScreen, getdata, save_raw, save_csv
 from utils.gui import CheckerBoard, get_screen_settings
 from speller_config import *
 from realtime_plot import Graph
@@ -117,7 +117,7 @@ def get_predicted_result(data):
     
     return list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0]
 
-def flicker(board):
+def flicker(trial):
     
     global frames
     global t0
@@ -153,12 +153,13 @@ def flicker(board):
         # predicting the output
         core.wait(1)
         data = board_shim.get_board_data()
+        save_csv(data, str(trial)+target, RECORDING_DIR, PARTICIPANT_ID)
         data_copy = data.copy()
         print("Shape of the data is ==>", data.shape)
         raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
         # raw.plot_psd()
-        output = get_predicted_result(raw.get_data()[:8,:1250])
-        # save_raw(raw,str(trialClock.getTime())+target,RECORDING_DIR, PARTICIPANT_ID)
+        output = get_predicted_result(raw.get_data()[:8,250:1250])
+        save_raw(raw, str(trial)+target,RECORDING_DIR, PARTICIPANT_ID)
         # output = get_predicted_result(raw.get_data()[:,:675])
         if (output == target):
             correct_count += 1
@@ -216,7 +217,7 @@ def main():
         core.wait(10)
         # Graph(board_shim)
 
-        for trials in range(NUM_TRIAL):
+        for trial in range(NUM_TRIAL):
             get_keypress()
             # Drawing display box
             display_box.autoDraw = True
@@ -228,7 +229,7 @@ def main():
             for target in targets.values():
                 target.autoDraw = True
                 # get_keypress()
-            flicker(board_shim)
+            flicker(trial)
 
         # At the end of the trial, calculate real duration and amount of frames
         t1 = trialClock.getTime()  # Time at end of trial
