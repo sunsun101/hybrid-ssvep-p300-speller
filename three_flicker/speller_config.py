@@ -33,7 +33,7 @@ TARGET_CHARACTERS:list = ["A", "B", "C"]
 
 SERIAL_PORT:str = "COM3"
 BOARD_ID:int = 8
-PARTICIPANT_ID:str = "sunsun_20230421_night_v3"
+PARTICIPANT_ID:str = "anagha_20230421"
 RECORDING_DIR:str = "three_flicker/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"

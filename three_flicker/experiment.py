@@ -176,10 +176,10 @@ def main():
         # saving the data from 1 block
         block_name = f'{PARTICIPANT_ID}'
         data = board_shim.get_board_data()
-        # data_copy = data.copy()
-        # raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
-        # save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
-        save_csv(data, RECORDING_DIR, PARTICIPANT_ID)
+        data_copy = data.copy()
+        raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
+        save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
+        # save_csv(data, RECORDING_DIR, PARTICIPANT_ID)
 
         for target in targets.values():
             target.autoDraw = False
