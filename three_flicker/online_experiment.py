@@ -33,6 +33,7 @@ from utils.gui import CheckerBoard, get_screen_settings
 from speller_config import *
 from realtime_plot import Graph
 from models.trca import TRCA
+from scipy import signal
 
 a = beeps(800)
 # Window parameters
@@ -117,6 +118,33 @@ def get_predicted_result(data):
     
     return list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0]
 
+def get_prediction(data):
+    marker_channel = BoardShim.get_marker_channel(BOARD_ID)
+    eeg_channels = BoardShim.get_eeg_channels(BOARD_ID)
+    data[eeg_channels] = data[eeg_channels] / 1e6
+    data = data[eeg_channels + [marker_channel]]
+
+    _CHANNELS = ['FZ', 'C3', 'CZ', 'C4', 'PZ', 'PO7', 'OZ', 'PO8']
+    data = data[:8,:1740]
+    order = 1
+    l_freq = 4
+    sos = signal.butter(order, l_freq, 'highpass', analog=False, fs=250, output='sos')
+    notch_freq = 50
+    quality = 1
+    b,a = signal.iirnotch(notch_freq, quality, fs=250)
+    for i in range(8):
+        data[i] = signal.lfilter(b, a, data[i])
+        data[i] = signal.sosfilt(sos, data[i])
+    X = np.expand_dims(data[:],axis=0)
+
+    print("Shape of data", X.shape)
+
+    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\three_flicker\TRCA_model.sav", 'rb'))
+    offset = int(250 * 1.5)
+    pred = loaded_model.predict(X[:,:,offset:offset + 1000])
+
+    return list(filter(lambda x: MARKERS[x] == pred, MARKERS))[0]
+
 def flicker(trial):
     
     global frames
@@ -155,12 +183,12 @@ def flicker(trial):
         data = board_shim.get_board_data()
         save_csv(data, str(trial)+target, RECORDING_DIR, PARTICIPANT_ID)
         data_copy = data.copy()
-        print("Shape of the data is ==>", data.shape)
+        # print("Shape of the data is ==>", data.shape)
         raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
         # raw.plot_psd()
-        output = get_predicted_result(raw.get_data()[:8,250:1500])
+        # output = get_predicted_result(raw.get_data()[:8,250:1500])
         save_raw(raw, str(trial)+target,RECORDING_DIR, PARTICIPANT_ID)
-        # output = get_predicted_result(raw.get_data()[:,:675])
+        output = get_prediction(data)
         if (output == target):
             correct_count += 1
         else:
