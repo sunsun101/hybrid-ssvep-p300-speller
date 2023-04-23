@@ -61,7 +61,7 @@ wave_type = "sin"
 
 flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, phase=phase, amplitude=AMPLITUDE, 
                                     wave_type=wave_type, duration=EPOCH_DURATION, fps=refresh_rate,
-                                    base_pos=pos)
+                                    base_pos=pos, height=HEIGHT, width=WIDTH)
             for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
 
 
@@ -154,40 +154,47 @@ def main():
         core.wait(10)
         sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
 
-        for trials in range(NUM_TRIAL):
-            get_keypress()
-            # Drawing display box
+        for block in range(NUM_BLOCK):
+            for trials in range(NUM_TRIAL):
+                get_keypress()
+                # Drawing display box
 
-            # Drawing the grid
-            # Display target characters
+                # Drawing the grid
+                # Display target characters
+                for target in targets.values():
+                    target.autoDraw = True
+                    # get_keypress()
+                flicker(board_shim)
+
+                # At the end of the trial, calculate real duration and amount of frames
+                t1 = trialClock.getTime()  # Time at end of trial
+                elapsed = t1 - t0
+                print(f"Time elapsed: {elapsed}")
+                print(f"Total frames: {frames}")
+            
+            
+            # saving the data from 1 block
+            block_name = f'{PARTICIPANT_ID}'
+            data = board_shim.get_board_data()
+            data_copy = data.copy()
+            raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
+            save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
+            # save_csv(data, RECORDING_DIR, PARTICIPANT_ID)
+
             for target in targets.values():
-                target.autoDraw = True
-                # get_keypress()
-            flicker(board_shim)
+                target.autoDraw = False
+            
+            if (block + 1) < NUM_BLOCK: 
+                drawTextOnScreen('Block Break 20 sec. You can blink but please donot move.',window)
+                core.wait(BLOCK_BREAK)
 
-            # At the end of the trial, calculate real duration and amount of frames
-            t1 = trialClock.getTime()  # Time at end of trial
-            elapsed = t1 - t0
-            print(f"Time elapsed: {elapsed}")
-            print(f"Total frames: {frames}")
-        
+            block += 1
+
         #Adding buffer of 10 sec at the end
         core.wait(10)
-        # saving the data from 1 block
-        block_name = f'{PARTICIPANT_ID}'
-        data = board_shim.get_board_data()
-        data_copy = data.copy()
-        raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
-        save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
-        # save_csv(data, RECORDING_DIR, PARTICIPANT_ID)
-
-        for target in targets.values():
-            target.autoDraw = False
-
         drawTextOnScreen('End of experiment, Thank you',window)
         core.wait(3)
         break
-
 
     if board_shim.is_prepared():
         logging.info('Releasing session')

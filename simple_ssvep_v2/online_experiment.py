@@ -80,7 +80,7 @@ wave_type = "sin"
 
 flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, phase=phase, amplitude=AMPLITUDE, 
                                     wave_type=wave_type, duration=EPOCH_DURATION, fps=refresh_rate,
-                                    base_pos=pos)
+                                    base_pos=pos, height=HEIGHT, width=WIDTH)
             for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
 
 # for _,flicker in flickers.items():

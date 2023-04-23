@@ -124,7 +124,7 @@ class CheckerBoard:
     
     """
 
-    def __init__(self, window, size=1000, rows=1, columns=1, frequency=10, phase=0, amplitude=1., wave_type='sin', duration=2.2, fps=60, base_pos=(0, 0)):
+    def __init__(self, window, size=1000, rows=1, columns=1, frequency=10, phase=0, amplitude=1., wave_type='sin', duration=2.2, fps=60, base_pos=(0, 0), height=100, width=100):
         self.window = window
         self.size = size
         self.rows = rows
@@ -134,6 +134,8 @@ class CheckerBoard:
         self.phase = phase
         self.amp = amplitude
         self.wave_type = wave_type
+        self.height = height
+        self.width = width
 
         self.wave_func = self._get_wave_func(duration, fps)
         self.bound_pos = self._get_boundaries()
@@ -387,8 +389,8 @@ class CheckerBoard:
                 
 
                 rect = visual.Rect(self.window,
-                                height = HEIGHT,
-                                width = WIDTH,  
+                                height = self.height,
+                                width = self.width,  
                                 pos=(x_pos, y_pos), 
                                 lineColor=square_color, fillColor=square_color)
 
