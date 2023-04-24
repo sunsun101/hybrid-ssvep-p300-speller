@@ -109,7 +109,7 @@ def get_predicted_result(data):
     fs = 250
     num_harms = 5
     num_fbs = 5
-    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\three_flicker\TRCA_model.sav", 'rb'))
+    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\nine_flicker\TRCA_model.sav", 'rb'))
     result = loaded_model.predict(data)
     print("Here is the result", list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0])
     # result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)

@@ -13,7 +13,7 @@ DISPLAY_BOX_SIZE = [1700,100]
 DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
-NUM_BLOCK: int = 4
+NUM_BLOCK: int = 1
 NUM_TRIAL: int = 3
 NUM_SESSION: int = 3
 EPOCH_DURATION: float = 5
@@ -21,7 +21,7 @@ ITI_DURATION: float = 0.1
 CUE_DURATION: float = 0.5
 NO_SUBSPELLER: int = 6
 
-FREQS: list = [8, 8.2, 8.4, 8.6, 8.8, 9, 9.2, 9.4, 9.6]
+FREQS: list = [12, 12.2, 12.4, 12.6, 12.8, 13, 13.2, 13.4, 13.6]
 
 POSITIONS: list = [(-800, 300), (0, 300), (800, 300), (-800, 0), (0,0), (800, 0), (-800, -300), (0, -300), (800, -300)]
 
@@ -33,7 +33,7 @@ TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
 
 SERIAL_PORT:str = "COM3"
 BOARD_ID:int = 8
-PARTICIPANT_ID:str = "vineet_20230423"
+PARTICIPANT_ID:str = "sunsun_20230424_v2"
 RECORDING_DIR:str = "nine_flicker/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"

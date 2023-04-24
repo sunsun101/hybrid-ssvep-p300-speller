@@ -172,15 +172,6 @@ def main():
                 print(f"Time elapsed: {elapsed}")
                 print(f"Total frames: {frames}")
             
-            #Adding buffer of 10 sec at the end
-            core.wait(10)
-            # saving the data from 1 block
-            block_name = f'{PARTICIPANT_ID}'
-            data = board_shim.get_board_data()
-            data_copy = data.copy()
-            raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
-            save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
-            # save_csv(data, RECORDING_DIR, PARTICIPANT_ID)
 
             for target in targets.values():
                 target.autoDraw = False
@@ -193,6 +184,13 @@ def main():
         
         #Adding buffer of 10 sec at the end
         core.wait(10)
+        # saving the data from 1 block
+        block_name = f'{PARTICIPANT_ID}'
+        data = board_shim.get_board_data()
+        data_copy = data.copy()
+        raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
+        save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
+        # save_csv(data, RECORDING_DIR, PARTICIPANT_ID)
         drawTextOnScreen('End of experiment, Thank you',window)
         core.wait(3)
         break
