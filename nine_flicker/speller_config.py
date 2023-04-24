@@ -13,11 +13,7 @@ DISPLAY_BOX_SIZE = [1700,100]
 DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
-<<<<<<< HEAD
-NUM_BLOCK: int = 2
-=======
 NUM_BLOCK: int = 1
->>>>>>> 855a504db7345827db123d048db303a3a568232a
 NUM_TRIAL: int = 3
 NUM_SESSION: int = 3
 EPOCH_DURATION: float = 5
