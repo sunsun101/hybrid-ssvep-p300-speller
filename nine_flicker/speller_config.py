@@ -1,6 +1,6 @@
 #Configuration for units=pix
-HEIGHT: int = 100
-WIDTH: int = 100
+HEIGHT: int = 200
+WIDTH: int = 200
 UNITS = "pix"
 HEIGHT_OF_TARGET = 35
 HORI_DIVIDER_START = [-850,-75]
