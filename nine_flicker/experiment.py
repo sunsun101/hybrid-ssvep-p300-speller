@@ -171,7 +171,6 @@ def main():
                 elapsed = t1 - t0
                 print(f"Time elapsed: {elapsed}")
                 print(f"Total frames: {frames}")
-            
 
             for target in targets.values():
                 target.autoDraw = False
