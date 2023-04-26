@@ -32,8 +32,8 @@ PHASES: list = [0 , 0 , 0, 0, 0, 0]
 TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F"]
 
 SERIAL_PORT:str = "COM3"
-BOARD_ID:int = -1
-PARTICIPANT_ID:str = "vineet_20230425_6_target"
+BOARD_ID:int = 8
+PARTICIPANT_ID:str = "vineet_20230426_6_target"
 RECORDING_DIR:str = "three_flicker/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
