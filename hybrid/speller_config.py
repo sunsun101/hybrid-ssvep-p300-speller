@@ -19,13 +19,13 @@ ITI_DURATION: float = 0.1
 CUE_DURATION: float = 0.5
 NO_SUBSPELLER: int = 4
 
-FREQS: list = [12, 12.2, 12.4, 12.6, 12.8, 13, 13.2, 13.4 ]
+FREQS: list = [12.4, 12.4, 13.0, 13.0, 14.0, 14.0, 14.6, 14.6 ]
 
 POSITIONS: list = [(-800, 200), (- 400, 200), (400, 200), (800, 200), (-800,-200), (-400, -200), (400, -200), (800, -200)]
 
 AMPLITUDE: float = 1.0
 
-PHASES: list = [0 , 0.35 , 0.70 , 1.05 , 1.40 , 1.75, 0.10, 0.45]
+PHASES: list = [0 , 0 , 1.05 , 1.05 , 0.80 , 0.80, 1.85, 1.85]
 
 TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F", "G", "H"]
 
