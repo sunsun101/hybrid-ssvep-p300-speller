@@ -176,7 +176,7 @@ def main():
                 target.autoDraw = False
 
             if (block + 1) < NUM_BLOCK: 
-                drawTextOnScreen('Block Break 20 sec. You can blink but please donot move.',window)
+                drawTextOnScreen('Block Break 30 sec. You can blink but please donot move.',window)
                 core.wait(BLOCK_BREAK)
 
             block += 1
