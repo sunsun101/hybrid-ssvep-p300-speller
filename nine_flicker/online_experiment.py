@@ -126,21 +126,24 @@ def get_prediction(data):
 
     _CHANNELS = ['FZ', 'C3', 'CZ', 'C4', 'PZ', 'PO7', 'OZ', 'PO8']
     data = data[:8,:1740]
-    order = 1
-    l_freq = 4
-    sos = signal.butter(order, l_freq, 'highpass', analog=False, fs=250, output='sos')
-    notch_freq = 50
-    quality = 1
-    b,a = signal.iirnotch(notch_freq, quality, fs=250)
-    for i in range(8):
-        data[i] = signal.lfilter(b, a, data[i])
-        data[i] = signal.sosfilt(sos, data[i])
+    # order = 1
+    # l_freq = 4
+    # sos = signal.butter(order, l_freq, 'highpass', analog=False, fs=250, output='sos')
+    # notch_freq = 50
+    # quality = 1
+    # b,a = signal.iirnotch(notch_freq, quality, fs=250)
+    # for i in range(8):
+    #     data[i] = signal.lfilter(b, a, data[i])
+    #     data[i] = signal.sosfilt(sos, data[i])
+    b,a = signal.iirfilter(10, Wn=[7, 90],  btype='band', analog=False, fs=250,  ftype='butter')
+    data = signal.filtfilt(b,a,data,axis=1)
     X = np.expand_dims(data[:],axis=0)
 
     print("Shape of data", X.shape)
 
     loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\nine_flicker\TRCA_model.sav", 'rb'))
-    offset = int(250 * 1.5)
+    # offset = int(250 * 1.5)
+    offset = 473
     pred = loaded_model.predict(X[:,:,offset:offset + 1000])
 
     return list(filter(lambda x: MARKERS[x] == pred, MARKERS))[0]
@@ -173,9 +176,9 @@ def flicker(trial):
         frames = 0
         for frame, j in enumerate(range(epoch_frames)):
             get_keypress()
-            # for flicker in flickers.values():
-            #     flicker.draw2(frame = frame)
-            target_flicker.draw2(frame = frame)
+            for flicker in flickers.values():
+                flicker.draw2(frame = frame)
+            # target_flicker.draw2(frame = frame)
             frames += 1
             window.flip() 
         # predicting the output
