@@ -143,7 +143,7 @@ def get_prediction(data):
 
     loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\nine_flicker\TRCA_model.sav", 'rb'))
     # offset = int(250 * 1.5)
-    offset = 473
+    offset = 475
     pred = loaded_model.predict(X[:,:,offset:offset + 1000])
 
     return list(filter(lambda x: MARKERS[x] == pred, MARKERS))[0]
