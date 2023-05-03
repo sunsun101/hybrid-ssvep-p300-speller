@@ -1,6 +1,6 @@
 #Configuration for units=pix
-HEIGHT: int = 140
-WIDTH: int = 140
+HEIGHT: int = 100
+WIDTH: int = 100
 UNITS = "pix"
 HEIGHT_OF_TARGET = 35
 HORI_DIVIDER_START = [-850,-75]
@@ -13,7 +13,7 @@ DISPLAY_BOX_SIZE = [1700,100]
 DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
-NUM_BLOCK: int = 3
+NUM_BLOCK: int = 5
 NUM_TRIAL: int = 3
 NUM_SESSION: int = 3
 EPOCH_DURATION: float = 5
@@ -35,7 +35,7 @@ TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
 
 SERIAL_PORT:str = "COM3"
 BOARD_ID:int = 8
-PARTICIPANT_ID:str = "vineet_20230503_concurrent"
+PARTICIPANT_ID:str = "tan_20230503_concurrent"
 RECORDING_DIR:str = "nine_flicker/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
