@@ -65,8 +65,9 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
             for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
 
 
-block_break_text = "Block Break 1 Minutes"
+block_break_text = "Block Break 1 Minute. Please donot move towards the end of break."
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
+counter = visual.TextStim(window, text='', pos=(0, 50), color=(-1., -1., -1.))
 
 def get_keypress():
     keys = event.getKeys()
@@ -175,11 +176,20 @@ def main():
             for target in targets.values():
                 target.autoDraw = False
 
+            countdown_timer = core.CountdownTimer(BLOCK_BREAK)
             if (block + 1) < NUM_BLOCK: 
-                drawTextOnScreen('Block Break 30 sec. You can blink but please donot move.',window)
-                core.wait(BLOCK_BREAK)
+                # drawTextOnScreen('Block Break 30 sec. You can blink but please donot move.',window)
+                # core.wait(BLOCK_BREAK)
+                block_break_start.autoDraw = True
+                while countdown_timer.getTime() > 0:
+                    time_remaining = countdown_timer.getTime()
+                    counter.text = f'Time remaining: {int(time_remaining)}'
+                    counter.draw()
+                    window.flip()
 
             block += 1
+            block_break_start.autoDraw = False
+            window.flip()
         
         #Adding buffer of 10 sec at the end
         core.wait(10)

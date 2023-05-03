@@ -13,8 +13,8 @@ DISPLAY_BOX_SIZE = [1700,100]
 DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
-NUM_BLOCK: int = 3
-NUM_TRIAL: int = 3
+NUM_BLOCK: int = 5
+NUM_TRIAL: int = 1
 NUM_SESSION: int = 3
 EPOCH_DURATION: float = 5
 ITI_DURATION: float = 0.1
@@ -34,10 +34,10 @@ PHASES: list = [0 , 0.35 , 0.70 , 1.05 , 1.40 , 1.75, 0.10, 0.45, 0.80 ]
 TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
 
 SERIAL_PORT:str = "COM3"
-BOARD_ID:int = 8
-PARTICIPANT_ID:str = "vineet_20230503_concurrent"
+BOARD_ID:int = -1
+PARTICIPANT_ID:str = "amp_20230503_concurrent"
 RECORDING_DIR:str = "nine_flicker/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
-BLOCK_BREAK:int = 30
+BLOCK_BREAK:int = 60
 MARKERS:dict = {"A": 1.0, "B": 2.0, "C": 3.0, "D": 4.0, "E": 5.0, "F": 6.0, "G": 7.0, "H": 8.0, "I": 9.0}

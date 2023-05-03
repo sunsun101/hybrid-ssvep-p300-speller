@@ -16,8 +16,10 @@ from brainflow.board_shim import BoardShim, BrainFlowInputParams
 from psychopy import core, event, visual  # import some libraries from PsychoPy
 from speller_config import *
 
-from utils.common import drawTextOnScreen, getdata_offline, save_raw
+from utils.common import drawTextOnScreen, save_raw, getdata, save_csv
 from utils.gui import CheckerBoard, get_screen_settings
+from scipy import signal
+import pickle
 
 a = beeps(800)
 
@@ -61,6 +63,8 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
 
 hori_divider = visual.Line(window, start=HORI_DIVIDER_START, end=HORI_DIVIDER_END, lineColor='black')
 ver_divider_1 = visual.Line(window, start=VER_DIVIDER_1_START, end=VER_DIVIDER_1_END, lineColor='black')
+display_box = visual.Rect(window, size=DISPLAY_BOX_SIZE, pos=DISPLAY_BOX_POS, lineColor='black', lineWidth=2.5)
+display_text_start = visual.TextStim(window, text=">", color=(-1., -1., -1.), pos=DISPLAY_BOX_POS)
 
 block_break_text = "Block Break 1 Minute. Please donot move towards the end of break."
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
@@ -79,10 +83,57 @@ def eegMarking(board,marker):
     board.insert_marker(marker)
     time.sleep(0.1)
 
-def flicker(board):
-    print("POSITIONS", POSITIONS)
+def get_predicted_result(data):
+    list_freqs = FREQS
+    list_phases = PHASES
+    fs = 250
+    num_harms = 5
+    num_fbs = 5
+    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\nine_flicker\TRCA_model.sav", 'rb'))
+    result = loaded_model.predict(data)
+    print("Here is the result", list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0])
+    # result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)
+    # print("Target Character found", TARGET_CHARACTERS[result])
+    # return TARGET_CHARACTERS[result]
+    
+    return list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0]
+
+def get_prediction(data):
+    marker_channel = BoardShim.get_marker_channel(BOARD_ID)
+    eeg_channels = BoardShim.get_eeg_channels(BOARD_ID)
+    data[eeg_channels] = data[eeg_channels] / 1e6
+    data = data[eeg_channels + [marker_channel]]
+
+    _CHANNELS = ['FZ', 'C3', 'CZ', 'C4', 'PZ', 'PO7', 'OZ', 'PO8']
+    data = data[:8,:1740]
+    # order = 1
+    # l_freq = 4
+    # sos = signal.butter(order, l_freq, 'highpass', analog=False, fs=250, output='sos')
+    # notch_freq = 50
+    # quality = 1
+    # b,a = signal.iirnotch(notch_freq, quality, fs=250)
+    # for i in range(8):
+    #     data[i] = signal.lfilter(b, a, data[i])
+    #     data[i] = signal.sosfilt(sos, data[i])
+    b,a = signal.iirfilter(10, Wn=[7, 90],  btype='band', analog=False, fs=250,  ftype='butter')
+    data = signal.filtfilt(b,a,data,axis=1)
+    X = np.expand_dims(data[:],axis=0)
+
+    print("Shape of data", X.shape)
+
+    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\nine_flicker\TRCA_model.sav", 'rb'))
+    # offset = int(250 * 1.5)
+    offset = 475
+    pred = loaded_model.predict(X[:,:,offset:offset + 1000])
+
+    return list(filter(lambda x: MARKERS[x] == pred, MARKERS))[0]
+
+def flicker(trial):
+
     global frames
     global t0
+    global correct_count
+    global incorrect_count
     # For the flickering
     for target in sequence:
         get_keypress()
@@ -99,8 +150,6 @@ def flicker(board):
                 window.flip()
 
         frames = 0
-        eegMarking(board, MARKERS['trial_start'])
-        
         # IDEA
         # Generating an entire epoch of frames
         # The shape is (n, m, f) where 
@@ -120,11 +169,24 @@ def flicker(board):
                         flickers[char].draw2(frame=frame[idx], amp_override=-1)
                     else:
                         if(marked == False and char == target):
-                            eegMarking(board,marker)
                             marked = True
                         flickers[char].draw2(frame=frame[idx])
             window.flip()
-
+        #predicting the output
+        core.wait(1)
+        data = board_shim.get_board_data()
+        save_csv(data, str(trial)+target, RECORDING_DIR, PARTICIPANT_ID)
+        data_copy = data.copy()
+        raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
+        save_raw(raw, str(trial)+target,RECORDING_DIR, PARTICIPANT_ID)
+        output = get_prediction(data)
+        if (output == target):
+            correct_count += 1
+        else:
+            incorrect_count +=1
+        display_text_start.text += output
+        display_text_start.draw()
+        window.flip()
 
 def gen_timeline(n:int, m:int, overlap:float, isShuffle:bool=False):
     import numpy as np
@@ -170,6 +232,9 @@ def gen_timeline_subspeller(m:int, overlap:float, isShuffle:bool=False):
 def main():
     global sequence
     global trialClock
+    global board_shim
+    global correct_count
+    global incorrect_count
 
     BoardShim.enable_dev_board_logger()
 
@@ -203,8 +268,11 @@ def main():
             drawTextOnScreen('Starting block ' + str(block + 1) ,window)
             core.wait(0.5)
             sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
-            for trials in range(NUM_TRIAL):
+            for trial in range(NUM_TRIAL):
                 get_keypress()
+                # Drawing display box
+                display_box.autoDraw = True
+                display_text_start.autoDraw = True
                 # Drawing the grid
                 hori_divider.autoDraw = True
                 ver_divider_1.autoDraw = True
@@ -213,7 +281,7 @@ def main():
                     target.autoDraw = True
                     # get_keypress()
                 print("Sequence is", sequence)
-                flicker(board_shim)
+                flicker(trial)
                 # At the end of the trial, calculate real duration and amount of frames
                 t1 = trialClock.getTime()  # Time at end of trial
                 elapsed = t1 - t0
@@ -240,15 +308,6 @@ def main():
             block_break_start.autoDraw = False
             window.flip()
 
-        #Adding buffer of 10 sec at the end
-        core.wait(10)
-        # saving the data from 1 block
-        block_name = f'{PARTICIPANT_ID}'
-        data = board_shim.get_board_data()
-        data_copy = data.copy()
-        raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
-        save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
-        # save_csv(data, RECORDING_DIR, PARTICIPANT_ID)
         drawTextOnScreen('End of experiment, Thank you',window)
         core.wait(3)
         break
