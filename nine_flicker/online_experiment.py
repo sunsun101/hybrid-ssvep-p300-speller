@@ -125,7 +125,7 @@ def get_prediction(data):
     data = data[eeg_channels + [marker_channel]]
 
     _CHANNELS = ['FZ', 'C3', 'CZ', 'C4', 'PZ', 'PO7', 'OZ', 'PO8']
-    data = data[:8,:1740]
+    data = data[:8,:750]
     # order = 1
     # l_freq = 4
     # sos = signal.butter(order, l_freq, 'highpass', analog=False, fs=250, output='sos')
@@ -144,7 +144,7 @@ def get_prediction(data):
     loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\nine_flicker\TRCA_model.sav", 'rb'))
     # offset = int(250 * 1.5)
     offset = 475
-    pred = loaded_model.predict(X[:,:,offset:offset + 1000])
+    pred = loaded_model.predict(X[:,:,offset:offset + 250])
 
     return list(filter(lambda x: MARKERS[x] == pred, MARKERS))[0]
 

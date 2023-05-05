@@ -16,9 +16,9 @@ SIZE: int = 100
 NUM_BLOCK: int = 5
 NUM_TRIAL: int = 3
 NUM_SESSION: int = 3
-EPOCH_DURATION: float = 5
+EPOCH_DURATION: float = 2
 ITI_DURATION: float = 0.1
-CUE_DURATION: float = 0.5
+CUE_DURATION: float = 1
 NO_SUBSPELLER: int = 6
 
 # FREQS: list = [12, 12.2, 12.4, 12.6, 12.8, 13, 13.2, 13.4, 13.6]
@@ -35,7 +35,7 @@ TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
 
 SERIAL_PORT:str = "COM3"
 BOARD_ID:int = 8
-PARTICIPANT_ID:str = "tan_20230503_concurrent"
+PARTICIPANT_ID:str = "sunsun_20230505_v3"
 RECORDING_DIR:str = "nine_flicker/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
