@@ -99,7 +99,8 @@ def flicker(board):
                 window.flip()
 
         frames = 0
-        eegMarking(board, MARKERS['trial_start'])
+        # eegMarking(board, MARKERS['trial_start'])
+        eegMarking(board,marker)
         
         # IDEA
         # Generating an entire epoch of frames
@@ -108,7 +109,7 @@ def flicker(board):
         # m: is each character in the sub speller
         # f: is frame_idx
         timeline = gen_timeline(n=4, m=2, overlap=0.5, isShuffle=True)
-        marked:bool = False
+        # marked:bool = False
         for t_idx in range(timeline.shape[2]):
             get_keypress()
             for n_idx in range(timeline.shape[0]):
@@ -119,9 +120,9 @@ def flicker(board):
                     if(frame[idx] == -1):
                         flickers[char].draw2(frame=frame[idx], amp_override=-1)
                     else:
-                        if(marked == False and char == target):
-                            eegMarking(board,marker)
-                            marked = True
+                        # if(marked == False and char == target):
+                        #     eegMarking(board,marker)
+                        #     marked = True
                         flickers[char].draw2(frame=frame[idx])
             window.flip()
 

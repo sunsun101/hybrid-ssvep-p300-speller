@@ -20,6 +20,7 @@ from utils.common import drawTextOnScreen, save_raw, getdata, save_csv
 from utils.gui import CheckerBoard, get_screen_settings
 from scipy import signal
 import pickle
+from models.trca import TRCA
 
 a = beeps(800)
 
@@ -62,7 +63,7 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
             for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
 
 hori_divider = visual.Line(window, start=HORI_DIVIDER_START, end=HORI_DIVIDER_END, lineColor='black')
-ver_divider_1 = visual.Line(window, start=VER_DIVIDER_1_START, end=VER_DIVIDER_1_END, lineColor='black')
+ver_divider_1 = visual.Line(window, start=ONLINE_VER_DIVIDER_1_START, end=VER_DIVIDER_1_END, lineColor='black')
 display_box = visual.Rect(window, size=DISPLAY_BOX_SIZE, pos=DISPLAY_BOX_POS, lineColor='black', lineWidth=2.5)
 display_text_start = visual.TextStim(window, text=">", color=(-1., -1., -1.), pos=DISPLAY_BOX_POS)
 
@@ -117,11 +118,9 @@ def get_prediction(data):
     #     data[i] = signal.sosfilt(sos, data[i])
     b,a = signal.iirfilter(10, Wn=[7, 90],  btype='band', analog=False, fs=250,  ftype='butter')
     data = signal.filtfilt(b,a,data,axis=1)
+
     X = np.expand_dims(data[:],axis=0)
-
-    print("Shape of data", X.shape)
-
-    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\nine_flicker\TRCA_model.sav", 'rb'))
+    loaded_model = pickle.load(open(r"E:\Thesis\HybridSpeller\nine_flicker\TRCA_model.sav", 'rb'))
     # offset = int(250 * 1.5)
     offset = 475
     pred = loaded_model.predict(X[:,:,offset:offset + 1000])
@@ -134,6 +133,7 @@ def flicker(trial):
     global t0
     global correct_count
     global incorrect_count
+
     # For the flickering
     for target in sequence:
         get_keypress()
@@ -142,7 +142,7 @@ def flicker(trial):
         marker = MARKERS[str(target)]
 
 
-        t0 = trialClock.getTime()  # Retrieve time at start of cue presentation
+        
         #Display the cue
         cue.pos = target_pos
         for frame in range(cue_frames):
@@ -150,6 +150,7 @@ def flicker(trial):
                 window.flip()
 
         frames = 0
+        t0 = trialClock.getTime()  # Retrieve time at start of cue presentation
         # IDEA
         # Generating an entire epoch of frames
         # The shape is (n, m, f) where 
@@ -157,6 +158,7 @@ def flicker(trial):
         # m: is each character in the sub speller
         # f: is frame_idx
         timeline = gen_timeline(n=4, m=2, overlap=0.5, isShuffle=True)
+        print("Shape of timeline ==>", timeline.shape)
         marked:bool = False
         for t_idx in range(timeline.shape[2]):
             get_keypress()
@@ -172,6 +174,11 @@ def flicker(trial):
                             marked = True
                         flickers[char].draw2(frame=frame[idx])
             window.flip()
+        # At the end of the trial, calculate real duration and amount of frames
+        t1 = trialClock.getTime()  # Time at end of trial
+        elapsed = t1 - t0
+        print(f"Time elapsed: {elapsed}")
+        print(f"Total frames: {frames}")
         #predicting the output
         core.wait(1)
         data = board_shim.get_board_data()
@@ -256,57 +263,42 @@ def main():
     logging.info('Begining the experiment')
 
     while True:
-
+        correct_count = 0
+        incorrect_count = 0
         # Starting the display
         trialClock = core.Clock()
         cal_start.draw()
         window.flip()
         core.wait(6)
 
-        for block in range(NUM_BLOCK):
-            a.hear('A_')
-            drawTextOnScreen('Starting block ' + str(block + 1) ,window)
-            core.wait(0.5)
-            sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
-            for trial in range(NUM_TRIAL):
-                get_keypress()
-                # Drawing display box
-                display_box.autoDraw = True
-                display_text_start.autoDraw = True
-                # Drawing the grid
-                hori_divider.autoDraw = True
-                ver_divider_1.autoDraw = True
-                # Display target characters
-                for target in targets.values():
-                    target.autoDraw = True
-                    # get_keypress()
-                print("Sequence is", sequence)
-                flicker(trial)
-                # At the end of the trial, calculate real duration and amount of frames
-                t1 = trialClock.getTime()  # Time at end of trial
-                elapsed = t1 - t0
-                print(f"Time elapsed: {elapsed}")
-                print(f"Total frames: {frames}")
-
-           
-            # clearing the screen
-            hori_divider.autoDraw = False
-            ver_divider_1.autoDraw = False
+        sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
+        for trial in range(NUM_TRIAL):
+            t0 = trialClock.getTime()
+            get_keypress()
+            # Drawing display box
+            display_box.autoDraw = True
+            display_text_start.autoDraw = True
+            # Drawing the grid
+            hori_divider.autoDraw = True
+            ver_divider_1.autoDraw = True
+            # Display target characters
             for target in targets.values():
-                target.autoDraw = False
+                target.autoDraw = True
+                # get_keypress()
+            flicker(trial)
+            
 
-            countdown_timer = core.CountdownTimer(BLOCK_BREAK)
-            if (block + 1) < NUM_BLOCK: 
-                block_break_start.autoDraw = True
-                while countdown_timer.getTime() > 0:
-                    time_remaining = countdown_timer.getTime()
-                    counter.text = f'Time remaining: {int(time_remaining)}'
-                    counter.draw()
-                    window.flip()
+        
+        # clearing the screen
+        hori_divider.autoDraw = False
+        ver_divider_1.autoDraw = False
+        display_box.autoDraw = False
+        display_text_start.autoDraw = False
+        for target in targets.values():
+            target.autoDraw = False
 
-            block += 1
-            block_break_start.autoDraw = False
-            window.flip()
+        trial += 1
+        window.flip()
 
         drawTextOnScreen('End of experiment, Thank you',window)
         core.wait(3)
