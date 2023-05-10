@@ -20,7 +20,7 @@ from utils.common import drawTextOnScreen, save_raw, getdata, save_csv
 from utils.gui import CheckerBoard, get_screen_settings
 from scipy import signal
 import pickle
-from models.trca import TRCA
+from models.nakanishi_trca import TRCA
 
 a = beeps(800)
 
@@ -119,12 +119,17 @@ def get_prediction(data):
         data[i] = signal.lfilter(b, a, data[i])
 
     X = np.expand_dims(data[:],axis=0)
-    loaded_model = pickle.load(open(r"E:\Thesis\HybridSpeller\nine_flicker\TRCA_model.sav", 'rb'))
+    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\hybrid\nakanishi_TRCA_model.sav", 'rb'))
     # offset = int(250 * 1.5)
-    offset = 475
-    pred = loaded_model.predict(X[:,:,offset:offset + 1000])
-
-    return list(filter(lambda x: MARKERS[x] == pred, MARKERS))[0]
+    offset = 491
+    X = np.swapaxes(X,0,2)
+    print("Shape of X after swap ==>", X.shape)
+    print("Shape of X after offset ==>",X[offset:offset + 1000,:, :].shape)
+    pred = loaded_model.predict(X[offset:offset + 1000,:, :])
+    print(pred)
+    
+    # plus one because the model starts predicting as 0 1 2
+    return list(filter(lambda x: MARKERS[x] == pred + 1, MARKERS))[0]
 
 def flicker(trial):
 
@@ -156,7 +161,7 @@ def flicker(trial):
         # n: number of sub-speller
         # m: is each character in the sub speller
         # f: is frame_idx
-        timeline = gen_timeline(n=4, m=2, overlap=0.5, isShuffle=True)
+        timeline = gen_timeline(n=4, m=2, overlap=0.5, isShuffle=False)
         print("Shape of timeline ==>", timeline.shape)
         marked:bool = False
         for t_idx in range(timeline.shape[2]):
@@ -268,7 +273,7 @@ def main():
         trialClock = core.Clock()
         cal_start.draw()
         window.flip()
-        core.wait(6)
+        core.wait(10)
 
         sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
         for trial in range(NUM_TRIAL):
@@ -298,6 +303,11 @@ def main():
 
         trial += 1
         window.flip()
+        acc = correct_count/(correct_count + incorrect_count)
+        print("correct count", correct_count)
+        print("incorrect count", incorrect_count)
+        print("Accuracy ==>", acc)
+
 
         drawTextOnScreen('End of experiment, Thank you',window)
         core.wait(3)

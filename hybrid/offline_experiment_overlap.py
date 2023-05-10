@@ -62,7 +62,7 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
 hori_divider = visual.Line(window, start=HORI_DIVIDER_START, end=HORI_DIVIDER_END, lineColor='black')
 ver_divider_1 = visual.Line(window, start=VER_DIVIDER_1_START, end=VER_DIVIDER_1_END, lineColor='black')
 
-block_break_text = "Block Break 1 Minute. Please donot move towards the end of break."
+block_break_text = "Block Break 30 sec. Please donot move towards the end of break."
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
 counter = visual.TextStim(window, text='', pos=(0, 50), color=(-1., -1., -1.))
 
@@ -108,7 +108,7 @@ def flicker(board):
         # n: number of sub-speller
         # m: is each character in the sub speller
         # f: is frame_idx
-        timeline = gen_timeline(n=4, m=2, overlap=0.5, isShuffle=True)
+        timeline = gen_timeline(n=4, m=2, overlap=0.5, isShuffle=False)
         # marked:bool = False
         for t_idx in range(timeline.shape[2]):
             get_keypress()
@@ -197,7 +197,7 @@ def main():
         trialClock = core.Clock()
         cal_start.draw()
         window.flip()
-        core.wait(6)
+        core.wait(10)
 
         for block in range(NUM_BLOCK):
             a.hear('A_')
@@ -241,8 +241,6 @@ def main():
             block_break_start.autoDraw = False
             window.flip()
 
-        #Adding buffer of 10 sec at the end
-        core.wait(10)
         # saving the data from 1 block
         block_name = f'{PARTICIPANT_ID}'
         data = board_shim.get_board_data()
@@ -251,7 +249,8 @@ def main():
         save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
         # save_csv(data, RECORDING_DIR, PARTICIPANT_ID)
         drawTextOnScreen('End of experiment, Thank you',window)
-        core.wait(3)
+        #Adding buffer of 10 sec at the end
+        core.wait(10)
         break
 
 

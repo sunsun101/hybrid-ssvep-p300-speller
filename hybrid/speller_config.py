@@ -12,21 +12,21 @@ DISPLAY_BOX_SIZE = [1700,100]
 DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
-NUM_BLOCK: int = 5
-NUM_TRIAL: int = 3
+NUM_BLOCK: int = 15
+NUM_TRIAL: int = 1
 NUM_SESSION: int = 3
-EPOCH_DURATION: float = 5
+EPOCH_DURATION: float = 3
 ITI_DURATION: float = 0.1
 CUE_DURATION: float = 1
 NO_SUBSPELLER: int = 4
 
-FREQS: list = [12.4, 12.4, 13.0, 13.0, 14.0, 14.0, 14.6, 14.6 ]
+FREQS: list = [8, 8, 8.6, 8.6, 9, 9, 9.6, 9.6 ]
 
 POSITIONS: list = [(-800, 200), (- 400, 200), (400, 200), (800, 200), (-800,-200), (-400, -200), (400, -200), (800, -200)]
 
 AMPLITUDE: float = 1.0
 
-PHASES: list = [0 , 0 , 1.05 , 1.05 , 0.80 , 0.80, 1.85, 1.85]
+PHASES: list = [0 , 0 , 1.05 , 1.05 , 1.75 , 1.75, 0.80, 0.80]
 
 TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F", "G", "H"]
 
@@ -38,7 +38,7 @@ SUBSPELLERS:dict = {"1": ["A", "B"],
 
 SERIAL_PORT:str = "COM3"
 BOARD_ID:int = 8
-PARTICIPANT_ID:str = "sunsun_20230505"
+PARTICIPANT_ID:str = "sunsun_20230510"
 RECORDING_DIR:str = "hybrid/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
