@@ -13,7 +13,7 @@ DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
 NUM_BLOCK: int = 15
-NUM_TRIAL: int = 1
+NUM_TRIAL: int = 3
 NUM_SESSION: int = 3
 EPOCH_DURATION: float = 3
 ITI_DURATION: float = 0.1
@@ -38,7 +38,7 @@ SUBSPELLERS:dict = {"1": ["A", "B"],
 
 SERIAL_PORT:str = "COM3"
 BOARD_ID:int = 8
-PARTICIPANT_ID:str = "sunsun_20230510"
+PARTICIPANT_ID:str = "amanda_20230510"
 RECORDING_DIR:str = "hybrid/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
