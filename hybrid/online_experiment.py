@@ -107,17 +107,16 @@ def get_prediction(data):
 
     _CHANNELS = ['FZ', 'C3', 'CZ', 'C4', 'PZ', 'PO7', 'OZ', 'PO8']
     data = data[:8,:1740]
-    # order = 1
-    # l_freq = 4
-    # sos = signal.butter(order, l_freq, 'highpass', analog=False, fs=250, output='sos')
-    # notch_freq = 50
-    # quality = 1
-    # b,a = signal.iirnotch(notch_freq, quality, fs=250)
-    # for i in range(8):
-    #     data[i] = signal.lfilter(b, a, data[i])
-    #     data[i] = signal.sosfilt(sos, data[i])
+ 
     b,a = signal.iirfilter(10, Wn=[7, 90],  btype='band', analog=False, fs=250,  ftype='butter')
     data = signal.filtfilt(b,a,data,axis=1)
+
+    notch_freq = 50
+    quality = 1
+    
+    b,a = signal.iirnotch(notch_freq, quality, fs=250)
+    for i in range(3):
+        data[i] = signal.lfilter(b, a, data[i])
 
     X = np.expand_dims(data[:],axis=0)
     loaded_model = pickle.load(open(r"E:\Thesis\HybridSpeller\nine_flicker\TRCA_model.sav", 'rb'))
