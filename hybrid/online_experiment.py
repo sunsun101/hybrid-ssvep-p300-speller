@@ -108,7 +108,8 @@ def get_prediction(data):
     _CHANNELS = ['FZ', 'C3', 'CZ', 'C4', 'PZ', 'PO7', 'OZ', 'PO8']
     data = data[:8,:1740]
  
-    b,a = signal.iirfilter(10, Wn=[7, 90],  btype='band', analog=False, fs=250,  ftype='butter')
+    # b,a = signal.iirfilter(10, Wn=[1, 92],  btype='band', analog=False, fs=250,  ftype='butter')
+    b,a = signal.iirfilter(7, Wn=[1, 92], rp=0.5, btype='band', analog=False, fs=250,  ftype='cheby1')
     data = signal.filtfilt(b,a,data,axis=1)
 
     notch_freq = 50
@@ -161,7 +162,7 @@ def flicker(trial):
         # n: number of sub-speller
         # m: is each character in the sub speller
         # f: is frame_idx
-        timeline = gen_timeline(n=4, m=2, overlap=0.5, isShuffle=False)
+        timeline = gen_timeline(n=4, m=4, overlap=0.5, isShuffle=False)
         print("Shape of timeline ==>", timeline.shape)
         marked:bool = False
         for t_idx in range(timeline.shape[2]):
