@@ -122,7 +122,7 @@ def get_prediction(data):
     X = np.expand_dims(data[:],axis=0)
     loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\hybrid\nakanishi_TRCA_model.sav", 'rb'))
     # offset = int(250 * 1.5)
-    offset = 491
+    offset = 495
     X = np.swapaxes(X,0,2)
     print("Shape of X after swap ==>", X.shape)
     print("Shape of X after offset ==>",X[offset:offset + 1000,:, :].shape)

@@ -12,8 +12,8 @@ DISPLAY_BOX_SIZE = [1700,100]
 DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
-NUM_BLOCK: int = 15
-NUM_TRIAL: int = 1
+NUM_BLOCK: int = 6
+NUM_TRIAL: int = 2
 NUM_SESSION: int = 3
 EPOCH_DURATION: float = 1
 ITI_DURATION: float = 0.1
@@ -45,8 +45,8 @@ SUBSPELLERS:dict = {"1": ["A", "B", "E", "F"],
                     }
 
 SERIAL_PORT:str = "COM3"
-BOARD_ID:int = -1
-PARTICIPANT_ID:str = "sunsun_4target_20230511_v2"
+BOARD_ID:int = 8
+PARTICIPANT_ID:str = "sunsun_4target_20230512_v2"
 RECORDING_DIR:str = "hybrid/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
