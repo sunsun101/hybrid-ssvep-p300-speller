@@ -15,7 +15,7 @@ SIZE: int = 100
 NUM_BLOCK: int = 15
 NUM_TRIAL: int = 1
 NUM_SESSION: int = 3
-EPOCH_DURATION: float = 2
+EPOCH_DURATION: float = 1
 ITI_DURATION: float = 0.1
 CUE_DURATION: float = 1
 NO_SUBSPELLER: int = 4
@@ -45,7 +45,7 @@ SUBSPELLERS:dict = {"1": ["A", "B", "E", "F"],
                     }
 
 SERIAL_PORT:str = "COM3"
-BOARD_ID:int = 8
+BOARD_ID:int = -1
 PARTICIPANT_ID:str = "sunsun_4target_20230511_v2"
 RECORDING_DIR:str = "hybrid/record"
 TYPE_OF_FILE:str = ".fif"
