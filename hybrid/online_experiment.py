@@ -165,7 +165,7 @@ def flicker(trial):
         # n: number of sub-speller
         # m: is each character in the sub speller
         # f: is frame_idx
-        timeline = gen_timeline(n=4, m=4, overlap=0.5, isShuffle=False)
+        timeline = gen_timeline(n=4, m=4, overlap=0.75, isShuffle=False)
         marked:bool = False
         for t_idx in range(timeline.shape[2]):
             get_keypress()
