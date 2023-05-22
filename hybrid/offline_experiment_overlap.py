@@ -18,6 +18,7 @@ from speller_config import *
 
 from utils.common import drawTextOnScreen, getdata_offline, save_raw
 from utils.gui import CheckerBoard, get_screen_settings
+import mne
 
 a = beeps(800)
 
@@ -149,7 +150,11 @@ def gen_timeline_subspeller(m:int, overlap:float, isShuffle:bool=False):
 
     n = m
     d = epoch_frames
+    # print("d ==>", d)
+    # print("n ==>", n)
+    # print("overlap ==>", overlap)
     t = int(d*(((n-1) * (1-overlap)) + 1))
+    # print("t ==>", t)
     # print(f"{n=} {m=} {d=} {t=}")
     timeline = np.zeros((n, t), dtype=int)
     # print(f"{timeline.shape}")
@@ -163,8 +168,12 @@ def gen_timeline_subspeller(m:int, overlap:float, isShuffle:bool=False):
 
     if(isShuffle):
         np.random.shuffle(timeline)
-
+    # print("Timeline shape before adding dimension ==>", timeline.shape)
+    # print(timeline)
+    
     timeline = np.expand_dims(timeline, axis=0)
+    # print("Timeline shape after adding dimension ==>", timeline.shape)
+    # print(timeline)
     return timeline
 
 
@@ -244,8 +253,10 @@ def main():
         # saving the data from 1 block
         block_name = f'{PARTICIPANT_ID}'
         data = board_shim.get_board_data()
-        data_copy = data.copy()
-        raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
+        # data_copy = data.copy()
+        raw = getdata_offline(data,BOARD_ID,n_samples = 250,dropEnable = False)
+        events = mne.find_events(raw)
+        print(len(events))
         save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
         # save_csv(data, RECORDING_DIR, PARTICIPANT_ID)
         drawTextOnScreen('End of experiment, Thank you',window)

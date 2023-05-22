@@ -12,7 +12,7 @@ DISPLAY_BOX_SIZE = [1700,100]
 DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
-NUM_BLOCK: int = 15
+NUM_BLOCK: int = 12
 NUM_TRIAL: int = 1
 NUM_SESSION: int = 3
 EPOCH_DURATION: float = 3
@@ -45,10 +45,10 @@ SUBSPELLERS:dict = {"1": ["A", "B", "E", "F"],
                     }
 
 SERIAL_PORT:str = "COM3"
-BOARD_ID:int = 8
-PARTICIPANT_ID:str = "sunsun_4target_20230519_3sec"
+BOARD_ID:int = -1
+PARTICIPANT_ID:str = "count_test_12"
 RECORDING_DIR:str = "hybrid/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
-BLOCK_BREAK:int = 30
+BLOCK_BREAK:int = 1
 MARKERS:dict = {"A": 1.0, "B": 2.0, "C": 3.0, "D": 4.0, "E": 5.0, "F": 6.0, "G": 7.0, "H": 8.0, "I": 9.0, "J": 10.0, "K": 11.0, "L":12.0, "M": 13.0, "N": 14.0, "O": 15.0, "P":16.0, "trial_start": 99.0}
