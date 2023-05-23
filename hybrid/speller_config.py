@@ -53,5 +53,5 @@ PARTICIPANT_ID:str = "sunsun_20230523_2sec_0.5_overlap_12Hz_v2"
 RECORDING_DIR:str = "hybrid/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
-BLOCK_BREAK:int = 30
+BLOCK_BREAK:int = 1
 MARKERS:dict = {"A": 1.0, "B": 2.0, "C": 3.0, "D": 4.0, "E": 5.0, "F": 6.0, "G": 7.0, "H": 8.0, "I": 9.0, "J": 10.0, "K": 11.0, "L":12.0, "M": 13.0, "N": 14.0, "O": 15.0, "P":16.0, "trial_start": 99.0}
