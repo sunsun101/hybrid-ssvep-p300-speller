@@ -100,7 +100,6 @@ def flicker(board):
 
         frames = 0
         # eegMarking(board, MARKERS['trial_start'])
-        eegMarking(board,marker)
         
         # IDEA
         # Generating an entire epoch of frames
@@ -108,8 +107,10 @@ def flicker(board):
         # n: number of sub-speller
         # m: is each character in the sub speller
         # f: is frame_idx
+        start_time = trialClock.getTime()
         timeline = gen_timeline(n=4, m=4, overlap=0.5, isShuffle=False)
         # marked:bool = False
+        eegMarking(board,marker)
         for t_idx in range(timeline.shape[2]):
             get_keypress()
             for n_idx in range(timeline.shape[0]):
@@ -125,6 +126,8 @@ def flicker(board):
                         #     marked = True
                         flickers[char].draw2(frame=frame[idx])
             window.flip()
+        stop_time = trialClock.getTime()
+        print("Elapsed time ==>", stop_time - start_time, timeline.shape)
 
 
 def gen_timeline(n:int, m:int, overlap:float, isShuffle:bool=False):
@@ -187,7 +190,7 @@ def main():
         time.sleep(1)
         sys.exit()
     #board start streaming
-    board_shim.start_stream()
+    board_shim.start_stream(num_samples=700000)
 
     logging.info('Begining the experiment')
 
@@ -241,6 +244,9 @@ def main():
             block_break_start.autoDraw = False
             window.flip()
 
+        drawTextOnScreen('End of experiment, Thank you',window)
+        #Adding buffer of 10 sec at the end
+        core.wait(10)
         # saving the data from 1 block
         block_name = f'{PARTICIPANT_ID}'
         data = board_shim.get_board_data()
@@ -248,9 +254,7 @@ def main():
         raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
         save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
         # save_csv(data, RECORDING_DIR, PARTICIPANT_ID)
-        drawTextOnScreen('End of experiment, Thank you',window)
-        #Adding buffer of 10 sec at the end
-        core.wait(10)
+        
         break
 
 

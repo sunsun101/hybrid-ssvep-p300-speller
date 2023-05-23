@@ -107,7 +107,7 @@ def get_prediction(data):
 
     _CHANNELS = ['FZ', 'C3', 'CZ', 'C4', 'PZ', 'PO7', 'OZ', 'PO8']
     print("Shape of data ==>", data.shape)
-    data = data[:8,:1125]
+    data = data[:8,:1750]
  
     # b,a = signal.iirfilter(10, Wn=[1, 92],  btype='band', analog=False, fs=250,  ftype='butter')
     b,a = signal.iirfilter(7, Wn=[1, 92], rp=0.5, btype='band', analog=False, fs=250,  ftype='cheby1')
@@ -123,11 +123,11 @@ def get_prediction(data):
     X = np.expand_dims(data[:],axis=0)
     loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\hybrid\nakanishi_TRCA_model.sav", 'rb'))
     # offset = int(250 * 1.5)
-    offset = 274
+    offset = 225
     X = np.swapaxes(X,0,2)
     print("Shape of X after swap ==>", X.shape)
-    print("Shape of X after offset ==>",X[offset:offset + 625,:, :].shape)
-    pred = loaded_model.predict(X[offset:offset + 625,:, :])
+    print("Shape of X after offset ==>",X[offset:offset + 1250,:, :].shape)
+    pred = loaded_model.predict(X[offset:offset + 1250,:, :])
     print(pred)
     
     # plus one because the model starts predicting as 0 1 2
@@ -165,7 +165,7 @@ def flicker(trial):
         # n: number of sub-speller
         # m: is each character in the sub speller
         # f: is frame_idx
-        timeline = gen_timeline(n=4, m=4, overlap=0.75, isShuffle=False)
+        timeline = gen_timeline(n=4, m=4, overlap=0.5, isShuffle=False)
         marked:bool = False
         for t_idx in range(timeline.shape[2]):
             get_keypress()
