@@ -184,6 +184,9 @@ def main():
     global sequence
     global trialClock
 
+    for key in SUBSPELLERS:
+        random.shuffle(SUBSPELLERS[key])
+
     BoardShim.enable_dev_board_logger()
 
     #brainflow initialization 
