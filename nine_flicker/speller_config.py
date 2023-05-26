@@ -34,7 +34,7 @@ PHASES: list = [0 , 0.35 , 0.70 , 1.05 , 1.40 , 1.75, 0.10, 0.45, 0.80 ]
 TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
 
 SERIAL_PORT:str = "COM3"
-BOARD_ID:int = 8
+BOARD_ID:int = -1
 PARTICIPANT_ID:str = "sunsun_20230511"
 RECORDING_DIR:str = "nine_flicker/record"
 TYPE_OF_FILE:str = ".fif"
