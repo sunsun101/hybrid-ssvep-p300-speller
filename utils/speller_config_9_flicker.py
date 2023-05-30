@@ -31,7 +31,7 @@ DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
 NUM_BLOCK: int = 5
-NUM_TRIAL: int = 5
+NUM_TRIAL: int = 2
 NUM_SESSION: int = 3
 EPOCH_DURATION: float = 5
 ITI_DURATION: float = 0.1
@@ -59,7 +59,7 @@ SUBSPELLERS:dict = {"1": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
                     "6": ["(", "Space", ")", "!", "-", "<<"]}
 SERIAL_PORT:str = "COM3"
 BOARD_ID:int = 8
-PARTICIPANT_ID:str = "buffer_online"
+PARTICIPANT_ID:str = "sunsun_30May"
 RECORDING_DIR:str = "simple_ssvep_v2/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"

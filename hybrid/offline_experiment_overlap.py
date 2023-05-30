@@ -184,6 +184,8 @@ def main():
     global sequence
     global trialClock
 
+    random.seed(42)
+
     for key in SUBSPELLERS:
         random.shuffle(SUBSPELLERS[key])
 
