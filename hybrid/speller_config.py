@@ -13,7 +13,7 @@ DISPLAY_BOX_POS = (0,450)
 
 SIZE: int = 100
 NUM_BLOCK: int = 15
-NUM_TRIAL: int = 1
+NUM_TRIAL: int = 2
 NUM_SESSION: int = 3
 EPOCH_DURATION: float = 2
 ITI_DURATION: float = 0.1
@@ -49,7 +49,7 @@ SUBSPELLERS:dict = {"1": ["A", "B", "E", "F"],
 
 SERIAL_PORT:str = "COM3"
 BOARD_ID:int = 8
-PARTICIPANT_ID:str = "sunsun_20230530_2sec_0.5_overlap_8Hz_session2"
+PARTICIPANT_ID:str = "game_20230531_2sec_0.5_overlap_8Hz"
 RECORDING_DIR:str = "hybrid/record"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
