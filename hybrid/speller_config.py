@@ -49,8 +49,8 @@ SUBSPELLERS:dict = {"1": ["A", "B", "E", "F"],
 
 SERIAL_PORT:str = "COM3"
 BOARD_ID:int = 8
-PARTICIPANT_ID:str = "amanda_20230601_2sec_0.5_overlap_8Hz_v2"
-RECORDING_DIR:str = "hybrid/record"
+PARTICIPANT_ID:str = "sagun_20230603_2sec_0.5_overlap_8Hz_session1"
+RECORDING_DIR:str = "hybrid/record/pilot"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
 BLOCK_BREAK:int = 30
