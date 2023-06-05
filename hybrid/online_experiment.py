@@ -79,26 +79,6 @@ def get_keypress():
     else: 
         return None
 
-def eegMarking(board,marker):
-    print("Inserting marker", marker)
-    board.insert_marker(marker)
-    time.sleep(0.1)
-
-def get_predicted_result(data):
-    list_freqs = FREQS
-    list_phases = PHASES
-    fs = 250
-    num_harms = 5
-    num_fbs = 5
-    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\nine_flicker\TRCA_model.sav", 'rb'))
-    result = loaded_model.predict(data)
-    print("Here is the result", list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0])
-    # result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)
-    # print("Target Character found", TARGET_CHARACTERS[result])
-    # return TARGET_CHARACTERS[result]
-    
-    return list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0]
-
 def get_prediction(data):
     marker_channel = BoardShim.get_marker_channel(BOARD_ID)
     eeg_channels = BoardShim.get_eeg_channels(BOARD_ID)
@@ -121,7 +101,7 @@ def get_prediction(data):
         data[i] = signal.lfilter(b, a, data[i])
 
     X = np.expand_dims(data[:],axis=0)
-    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\hybrid\nakanishi_TRCA_model.sav", 'rb'))
+    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\hybrid\nakanishi_TRCA_model_combined-12.sav", 'rb'))
     # offset = int(250 * 1.5)
     offset = 225
     X = np.swapaxes(X,0,2)
@@ -250,6 +230,11 @@ def main():
     global correct_count
     global incorrect_count
 
+    # random.seed(42)
+
+    # for key in SUBSPELLERS:
+    #     random.shuffle(SUBSPELLERS[key])
+
     BoardShim.enable_dev_board_logger()
 
     #brainflow initialization 
@@ -265,7 +250,7 @@ def main():
         time.sleep(1)
         sys.exit()
     #board start streaming
-    board_shim.start_stream()
+    board_shim.start_stream(num_samples=700000 )
 
     logging.info('Begining the experiment')
 

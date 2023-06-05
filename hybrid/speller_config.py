@@ -22,8 +22,10 @@ NO_SUBSPELLER: int = 4
 
 # FREQS: list = [8, 8, 8.6, 8.6, 9, 9, 9.6, 9.6 ]
 
-FREQS: list = [8, 8, 8.6, 8.6, 8, 8, 8.6, 8.6, 9, 9, 9.6, 9.6, 9, 9 ,9.6, 9.6]
+# FREQS: list = [8, 8, 8.6, 8.6, 8, 8, 8.6, 8.6, 9, 9, 9.6, 9.6, 9, 9 ,9.6, 9.6]
 # FREQS: list = [12.4, 12.4, 13.2, 13.2, 12.4, 12.4, 13.2, 13.2, 14.0, 14.0, 14.6, 14.6, 14.0, 14.0 ,14.6, 14.6]
+FREQS: list = [8, 8, 10, 10, 8, 8, 10, 10, 12, 12, 14, 14, 12, 12 ,14, 14]
+
 
 
 
@@ -34,8 +36,10 @@ AMPLITUDE: float = 1.0
 
 # PHASES: list = [0 , 0 , 1.05 , 1.05 , 1.75 , 1.75, 0.80, 0.80]
 
-PHASES: list = [0 , 0 , 1.05 , 1.05, 0 , 0, 1.05 , 1.05 , 1.75 , 1.75, 0.80 , 0.80, 1.75, 1.75, 0.80, 0.80]
+# PHASES: list = [0 , 0 , 1.05 , 1.05, 0 , 0, 1.05 , 1.05 , 1.75 , 1.75, 0.80 , 0.80, 1.75, 1.75, 0.80, 0.80]
 # PHASES: list = [0 , 0 , 1.40 , 1.40, 0 , 0, 1.40 , 1.40 , 0.80 , 0.80, 1.85 , 1.85, 0.80, 0.80, 1.85, 1.85]
+PHASES: list = [0 , 0 , 1 , 1, 0 , 0, 1 , 1 , 0 , 0, 1 , 1, 0, 0, 1, 1]
+
 
 
 # TARGET_CHARACTERS:list = ["A", "B", "C", "D", "E", "F", "G", "H"]
@@ -49,7 +53,7 @@ SUBSPELLERS:dict = {"1": ["A", "B", "E", "F"],
 
 SERIAL_PORT:str = "COM3"
 BOARD_ID:int = 8
-PARTICIPANT_ID:str = "sagun_20230603_2sec_0.5_overlap_8Hz_session1"
+PARTICIPANT_ID:str = "sagun_20230605_2sec_0.5_overlap_8Hz_session4"
 RECORDING_DIR:str = "hybrid/record/pilot"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"
