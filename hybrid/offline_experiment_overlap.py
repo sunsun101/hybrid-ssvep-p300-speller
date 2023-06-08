@@ -63,7 +63,7 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
 hori_divider = visual.Line(window, start=HORI_DIVIDER_START, end=HORI_DIVIDER_END, lineColor='black')
 ver_divider_1 = visual.Line(window, start=VER_DIVIDER_1_START, end=VER_DIVIDER_1_END, lineColor='black')
 
-block_break_text = "Block Break 30 sec. Please donot move towards the end of break."
+block_break_text = "Block Break 60 sec. Please donot move towards the end of break."
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
 counter = visual.TextStim(window, text='', pos=(0, 50), color=(-1., -1., -1.))
 

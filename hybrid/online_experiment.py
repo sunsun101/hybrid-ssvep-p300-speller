@@ -97,11 +97,11 @@ def get_prediction(data):
     quality = 1
     
     b,a = signal.iirnotch(notch_freq, quality, fs=250)
-    for i in range(3):
+    for i in range(8):
         data[i] = signal.lfilter(b, a, data[i])
 
     X = np.expand_dims(data[:],axis=0)
-    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\hybrid\nakanishi_TRCA_model_combined-12.sav", 'rb'))
+    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\hybrid\nakanishi_TRCA_model.sav", 'rb'))
     # offset = int(250 * 1.5)
     offset = 225
     X = np.swapaxes(X,0,2)
@@ -230,10 +230,10 @@ def main():
     global correct_count
     global incorrect_count
 
-    # random.seed(42)
+    random.seed(42)
 
-    # for key in SUBSPELLERS:
-    #     random.shuffle(SUBSPELLERS[key])
+    for key in SUBSPELLERS:
+        random.shuffle(SUBSPELLERS[key])
 
     BoardShim.enable_dev_board_logger()
 
