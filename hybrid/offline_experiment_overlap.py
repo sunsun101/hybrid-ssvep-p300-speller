@@ -41,7 +41,7 @@ cue_frames = int(CUE_DURATION * refresh_rate)
 
 #Presentation content
 
-cue = visual.Rect(window, width=WIDTH, height=HEIGHT, pos=[0, 0], lineWidth=3, lineColor='red')
+cue = visual.Rect(window, width=WIDTH, height=HEIGHT, pos=[0, 0], lineWidth=6, lineColor='red')
 
 calib_text_start = "Starting callibration phase.Please avoid moving or blinking.\n\
 You may blink when shifting your gaze.Focus your target on the characters presented with red cue."
