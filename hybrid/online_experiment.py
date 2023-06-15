@@ -65,7 +65,8 @@ flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, pha
 hori_divider = visual.Line(window, start=HORI_DIVIDER_START, end=HORI_DIVIDER_END, lineColor='black')
 ver_divider_1 = visual.Line(window, start=ONLINE_VER_DIVIDER_1_START, end=VER_DIVIDER_1_END, lineColor='black')
 display_box = visual.Rect(window, size=DISPLAY_BOX_SIZE, pos=DISPLAY_BOX_POS, lineColor='black', lineWidth=2.5)
-display_text_start = visual.TextStim(window, text=">", color=(-1., -1., -1.), pos=DISPLAY_BOX_POS, height=50)
+display_text_start = visual.TextStim(window, text=">", color=(-1., -1., -1.), pos=OUTPUT_POS, height=35, alignText='left')
+sequence_display = visual.TextStim(window, text="", color='red', pos=SEQUENCE_POS, height=35, alignText='left')
 
 block_break_text = "Block Break 1 Minute. Please donot move towards the end of break."
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
@@ -145,7 +146,7 @@ def flicker(trial):
         # n: number of sub-speller
         # m: is each character in the sub speller
         # f: is frame_idx
-        timeline = gen_timeline(n=4, m=2, overlap=0.5, isShuffle=False)
+        timeline = gen_timeline(n=NO_SUBSPELLER, m=NO_CHARACTER, overlap=0.5, isShuffle=False)
         marked:bool = False
         for t_idx in range(timeline.shape[2]):
             get_keypress()
@@ -270,6 +271,8 @@ def main():
             # Drawing display box
             display_box.autoDraw = True
             display_text_start.autoDraw = True
+            sequence_display.text = "".join(sequence) * NUM_TRIAL
+            sequence_display.autoDraw = True
             # Drawing the grid
             hori_divider.autoDraw = True
             ver_divider_1.autoDraw = True

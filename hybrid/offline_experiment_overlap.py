@@ -109,7 +109,7 @@ def flicker(board):
         # m: is each character in the sub speller
         # f: is frame_idx
         start_time = trialClock.getTime()
-        timeline = gen_timeline(n=4, m=2, overlap=0.5, isShuffle=False)
+        timeline = gen_timeline(n=NO_SUBSPELLER, m=NO_CHARACTER, overlap=0.5, isShuffle=False)
         # marked:bool = False
         eegMarking(board,marker)
         for t_idx in range(timeline.shape[2]):
