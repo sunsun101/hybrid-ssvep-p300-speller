@@ -106,8 +106,8 @@ def get_prediction(data):
     offset = 225
     X = np.swapaxes(X,0,2)
     print("Shape of X after swap ==>", X.shape)
-    print("Shape of X after offset ==>",X[offset:offset + 1250,:, :].shape)
-    pred = loaded_model.predict(X[offset:offset + 1250,:, :])
+    print("Shape of X after offset ==>",X[offset:offset + 750,:, :].shape)
+    pred = loaded_model.predict(X[offset:offset + 750,:, :])
     print(pred)
     
     # plus one because the model starts predicting as 0 1 2
@@ -145,7 +145,7 @@ def flicker(trial):
         # n: number of sub-speller
         # m: is each character in the sub speller
         # f: is frame_idx
-        timeline = gen_timeline(n=4, m=4, overlap=0.5, isShuffle=False)
+        timeline = gen_timeline(n=4, m=2, overlap=0.5, isShuffle=False)
         marked:bool = False
         for t_idx in range(timeline.shape[2]):
             get_keypress()
