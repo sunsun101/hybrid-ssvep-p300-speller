@@ -302,7 +302,7 @@ def main():
 
 
         drawTextOnScreen('End of experiment, Thank you',window)
-        core.wait(3)
+        core.wait(5)
         break
 
 
