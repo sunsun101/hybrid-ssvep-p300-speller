@@ -68,7 +68,7 @@ display_box = visual.Rect(window, size=DISPLAY_BOX_SIZE, pos=DISPLAY_BOX_POS, li
 display_text_start = visual.TextStim(window, text=">", color=(-1., -1., -1.), pos=OUTPUT_POS, height=35, alignText='left')
 sequence_display = visual.TextStim(window, text="", color='red', pos=SEQUENCE_POS, height=35, alignText='left')
 
-block_break_text = "Block Break 1 Minute. Please donot move towards the end of break."
+block_break_text = "Block Break 1 Minute. Please do not move towards the end of break."
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
 counter = visual.TextStim(window, text='', pos=(0, 50), color=(-1., -1., -1.))
 
@@ -102,13 +102,13 @@ def get_prediction(data):
         data[i] = signal.lfilter(b, a, data[i])
 
     X = np.expand_dims(data[:],axis=0)
-    loaded_model = pickle.load(open(r"E:\Thesis\HybridSpeller\hybrid\nakanishi_TRCA_model.sav", 'rb'))
+    loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\hybrid\nakanishi_TRCA_model.sav", 'rb'))
     # offset = int(250 * 1.5)
     offset = 225
     X = np.swapaxes(X,0,2)
     print("Shape of X after swap ==>", X.shape)
-    print("Shape of X after offset ==>",X[offset:offset + 750,:, :].shape)
-    pred = loaded_model.predict(X[offset:offset + 750,:, :])
+    print("Shape of X after offset ==>",X[offset:offset + OFFSET_VALUE,:, :].shape)
+    pred = loaded_model.predict(X[offset:offset + OFFSET_VALUE,:, :])
     print(pred)
     
     # plus one because the model starts predicting as 0 1 2
@@ -283,11 +283,12 @@ def main():
             flicker(trial)
             
 
-        
+        core.wait(3)
         # clearing the screen
         hori_divider.autoDraw = False
         ver_divider_1.autoDraw = False
         display_box.autoDraw = False
+        sequence_display.autoDraw = False
         display_text_start.autoDraw = False
         for target in targets.values():
             target.autoDraw = False
