@@ -64,6 +64,8 @@ hori_divider = visual.Line(window, start=HORI_DIVIDER_START, end=HORI_DIVIDER_EN
 ver_divider_1 = visual.Line(window, start=VER_DIVIDER_1_START, end=VER_DIVIDER_1_END, lineColor='black')
 
 block_break_text = f"Block Break {BLOCK_BREAK} sec. Please do not move towards the end of break."
+# block_break_start = visual.TextStim(window, text=block_break_text, color=(1., 1., 1.))
+# counter = visual.TextStim(window, text='', pos=(0, 50), color=(1., 1., 1.))
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
 counter = visual.TextStim(window, text='', pos=(0, 50), color=(-1., -1., -1.))
 
@@ -245,6 +247,8 @@ def main():
             for target in targets.values():
                 target.autoDraw = False
 
+            # window.color = 'black'
+            # window.flip()
             countdown_timer = core.CountdownTimer(BLOCK_BREAK)
             if (block + 1) < NUM_BLOCK: 
                 block_break_start.autoDraw = True
@@ -258,6 +262,8 @@ def main():
             block += 1
             block_break_start.autoDraw = False
             window.flip()
+            # window.color = 'white'
+            # window.flip()
 
         drawTextOnScreen('End of experiment, Thank you',window)
         #Adding buffer of 10 sec at the end
