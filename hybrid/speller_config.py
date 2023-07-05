@@ -95,9 +95,9 @@ SUBSPELLERS:dict = {"1": ["A", "B", "E", "F"],
 #                     }
 
 SERIAL_PORT:str = "COM3"
-BOARD_ID:int = -1
-# PARTICIPANT_ID:str = "sunsun_20230704_2sec_0.5_overlap_8Hz_16target"
-PARTICIPANT_ID:str="test"
+BOARD_ID:int = 8
+PARTICIPANT_ID:str = "srijan_20230704_2sec_0.5_overlap_8Hz_16target_v2"
+# PARTICIPANT_ID:str="test"
 RECORDING_DIR:str = "hybrid/record/final"
 TYPE_OF_FILE:str = ".fif"
 CSV_DIR:str = "csv/"

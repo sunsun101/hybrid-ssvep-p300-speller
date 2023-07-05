@@ -105,7 +105,7 @@ class Stimuli:
 
     def _make_stimuli(self, base_pos):
         """
-        Just draw a rectancle
+        Just draw a rectangle
         """
         x_pos, y_pos = base_pos
         color = 'black'
