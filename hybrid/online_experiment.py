@@ -17,7 +17,7 @@ from psychopy import core, event, visual  # import some libraries from PsychoPy
 from speller_config import *
 
 from utils.common import drawTextOnScreen, save_raw, getdata, save_csv
-from utils.gui import CheckerBoard, get_screen_settings
+from utils.gui_hybrid import Stimuli, get_screen_settings
 from scipy import signal
 import pickle
 from models.nakanishi_trca import TRCA
@@ -57,7 +57,7 @@ targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=
 
 
 wave_type = "sin"
-flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, phase=phase, amplitude=AMPLITUDE, 
+flickers = {f"{target}": Stimuli(window=window, frequency=f, phase=phase, amplitude=AMPLITUDE, 
                                     wave_type=wave_type, duration=EPOCH_DURATION, fps=refresh_rate,
                                     base_pos=pos, height=HEIGHT, width=WIDTH)
             for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
@@ -183,6 +183,7 @@ def flicker(trial):
         display_text_start.draw()
         window.flip()
 
+## Jo's code for the overlapping and flickering of the stimuli
 def gen_timeline(n:int, m:int, overlap:float, isShuffle:bool=False):
     import numpy as np
     timeline = []
@@ -206,13 +207,13 @@ def gen_timeline_subspeller(m:int, overlap:float, isShuffle:bool=False):
     n = m
     d = epoch_frames
     t = int(d*(((n-1) * (1-overlap)) + 1))
-    print(f"{n=} {m=} {d=} {t=}")
+    # print(f"{n=} {m=} {d=} {t=}")
     timeline = np.zeros((n, t), dtype=int)
-    print(f"{timeline.shape}")
+    # print(f"{timeline.shape}")
     for i in range(n):
         start_offset = int(i * d * (1 - overlap))
         end_offset = start_offset + d
-        print(f"{i=} {start_offset=} {end_offset=}")
+        # print(f"{i=} {start_offset=} {end_offset=}")
         # idx = characters.index(characters[i])
         timeline[i, start_offset:end_offset] = range(1,d+1)
     timeline += -1

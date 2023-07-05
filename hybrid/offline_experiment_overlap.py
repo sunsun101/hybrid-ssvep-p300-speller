@@ -1,6 +1,5 @@
 import os
 import sys
-
 path = os.path.dirname(os.path.dirname(__file__)) 
 sys.path.append(path)
 import logging
@@ -11,16 +10,16 @@ from multiprocessing import Process
 
 import brainflow
 import numpy as np
-from beeply.notes import *
+# from beeply.notes import *
 from brainflow.board_shim import BoardShim, BrainFlowInputParams
 from psychopy import core, event, visual  # import some libraries from PsychoPy
 from speller_config import *
 
 from utils.common import drawTextOnScreen, getdata_offline, save_raw
-from utils.gui import CheckerBoard, get_screen_settings
+from utils.gui_hybrid import Stimuli, get_screen_settings
 import mne
 
-a = beeps(800)
+# a = beeps(800)
 
 # Window parameters
 system = platform.system()
@@ -55,7 +54,7 @@ targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=
 
 
 wave_type = "sin"
-flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, phase=phase, amplitude=AMPLITUDE, 
+flickers = {f"{target}":Stimuli(window=window, frequency=f, phase=phase, amplitude=AMPLITUDE, 
                                     wave_type=wave_type, duration=EPOCH_DURATION, fps=refresh_rate,
                                     base_pos=pos, height=HEIGHT, width=WIDTH)
             for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
@@ -219,7 +218,7 @@ def main():
         core.wait(10)
 
         for block in range(NUM_BLOCK):
-            a.hear('A_')
+            # a.hear('A_')
             drawTextOnScreen('Starting block ' + str(block + 1) ,window)
             core.wait(0.5)
             sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
