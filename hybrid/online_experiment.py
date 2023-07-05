@@ -147,7 +147,7 @@ def flicker(trial):
         # m: is each character in the sub speller
         # f: is frame_idx
         timeline = gen_timeline(n=NO_SUBSPELLER, m=NO_CHARACTER, overlap=0.5, isShuffle=False)
-        marked:bool = False
+        # marked:bool = False
         for t_idx in range(timeline.shape[2]):
             get_keypress()
             for n_idx in range(timeline.shape[0]):
@@ -158,8 +158,8 @@ def flicker(trial):
                     if(frame[idx] == -1):
                         flickers[char].draw2(frame=frame[idx], amp_override=-1)
                     else:
-                        if(marked == False and char == target):
-                            marked = True
+                        # if(marked == False and char == target):
+                        #     marked = True
                         flickers[char].draw2(frame=frame[idx])
             window.flip()
         # At the end of the trial, calculate real duration and amount of frames
@@ -206,13 +206,13 @@ def gen_timeline_subspeller(m:int, overlap:float, isShuffle:bool=False):
     n = m
     d = epoch_frames
     t = int(d*(((n-1) * (1-overlap)) + 1))
-    # print(f"{n=} {m=} {d=} {t=}")
+    print(f"{n=} {m=} {d=} {t=}")
     timeline = np.zeros((n, t), dtype=int)
-    # print(f"{timeline.shape}")
+    print(f"{timeline.shape}")
     for i in range(n):
         start_offset = int(i * d * (1 - overlap))
         end_offset = start_offset + d
-        # print(f"{i=} {start_offset=} {end_offset=}")
+        print(f"{i=} {start_offset=} {end_offset=}")
         # idx = characters.index(characters[i])
         timeline[i, start_offset:end_offset] = range(1,d+1)
     timeline += -1
