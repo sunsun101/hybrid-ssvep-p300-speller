@@ -61,6 +61,7 @@ flickers = {f"{target}":Stimuli(window=window, frequency=f, phase=phase, amplitu
 
 hori_divider = visual.Line(window, start=HORI_DIVIDER_START, end=HORI_DIVIDER_END, lineColor='black')
 ver_divider_1 = visual.Line(window, start=VER_DIVIDER_1_START, end=VER_DIVIDER_1_END, lineColor='black')
+ver_divider_2 = visual.Line(window, start=VER_DIVIDER_2_START, end=VER_DIVIDER_2_END, lineColor='black')
 
 block_break_text = f"Block Break {BLOCK_BREAK} sec. Please do not move towards the end of break."
 # block_break_start = visual.TextStim(window, text=block_break_text, color=(1., 1., 1.))
@@ -227,6 +228,7 @@ def main():
                 # Drawing the grid
                 hori_divider.autoDraw = True
                 ver_divider_1.autoDraw = True
+                ver_divider_2.autoDraw = True
                 # Display target characters
                 for target in targets.values():
                     target.autoDraw = True
