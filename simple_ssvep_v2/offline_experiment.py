@@ -17,9 +17,9 @@ import brainflow
 from brainflow.board_shim import BoardShim, BrainFlowInputParams
 import time
 import logging
-from utils.common import getdata, save_raw, drawTextOnScreen
+from utils.common import getdata_offline, save_raw, drawTextOnScreen
 from beeply.notes import *
-from utils.speller_config import *
+from utils.speller_config_9_flicker import *
 
 a = beeps(800)
 # Window parameters
@@ -42,7 +42,7 @@ cue_frames = int(CUE_DURATION * refresh_rate)
 
 #Presentation content
 
-cue = visual.Rect(window, width=220, height=200, pos=[0, 0], lineWidth=3, lineColor='red')
+cue = visual.Rect(window, width=WIDTH, height=HEIGHT, pos=[0, 0], lineWidth=3, lineColor='red')
 
 calib_text_start = "Starting callibration phase.Please avoid moving or blinking.\n\
 You may blink when shifting your gaze.Focus your target on the characters presented with red cue."
@@ -59,7 +59,7 @@ wave_type = "sin"
 
 flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, phase=phase, amplitude=AMPLITUDE, 
                                     wave_type=wave_type, duration=EPOCH_DURATION, fps=refresh_rate,
-                                    base_pos=pos)
+                                    base_pos=pos, height=HEIGHT, width=WIDTH)
             for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
 
 
@@ -144,12 +144,13 @@ def main():
         trialClock = core.Clock()
         cal_start.draw()
         window.flip()
-        core.wait(6)
+        core.wait(3)
 
         for block in range(NUM_BLOCK):
             a.hear('A_')
             drawTextOnScreen('Starting block ' + str(block + 1) + ".Please donot move now",window)
-            core.wait(7)
+            #Adding buffer of 10 sec at the end
+            core.wait(10)
             sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
 
             for trials in range(NUM_TRIAL):
@@ -169,13 +170,19 @@ def main():
                 elapsed = t1 - t0
                 print(f"Time elapsed: {elapsed}")
                 print(f"Total frames: {frames}")
-
+            
+            #Clearing the characters on screen
+            for target in targets.values():
+                target.autoDraw = False
+            drawTextOnScreen('Block Complete',window)
+            #Adding buffer of 10 sec at the end
+            core.wait(10)
             # saving the data from 1 block
             block_name = f'{PARTICIPANT_ID}{block}'
             data = board_shim.get_board_data()
             data_copy = data.copy()
-            raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
-            save_raw(raw,block_name,RECORDING_DIR)
+            raw = getdata_offline(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
+            save_raw(raw,block_name,RECORDING_DIR, PARTICIPANT_ID)
 
             for target in targets.values():
                 target.autoDraw = False

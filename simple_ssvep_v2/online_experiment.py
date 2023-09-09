@@ -1,26 +1,42 @@
-from turtle import fillcolor, pos
-from psychopy import visual, core, event #import some libraries from PsychoPy
-import platform
+								 
+																			 
+			   
 import os
+import platform
 import sys
+from turtle import fillcolor, pos
+
+from psychopy import core, event, visual  # import some libraries from PsychoPy
+
 path = os.path.dirname(os.path.dirname(__file__)) 
 sys.path.append(path)
-from utils.gui import get_screen_settings, CheckerBoard
+													   
 import argparse
 import json
-import numpy as np
-import random
-from multiprocessing import Process
-import multiprocessing
-import threading
-import brainflow
-from brainflow.board_shim import BoardShim, BrainFlowInputParams
-import time
 import logging
-from utils.common import getdata, save_raw, drawTextOnScreen
+			 
+								   
+import multiprocessing
+import pickle
+import random
+import threading
+				
+																
+import time
+from multiprocessing import Process
+
+import brainflow
+import numpy as np
 from beeply.notes import *
-from utils.speller_config import *
+from brainflow.board_shim import BoardShim, BrainFlowInputParams
 from fbcca import fbcca_realtime
+
+from models.cca import ECCA
+from utils.common import drawTextOnScreen, getdata, save_raw
+from utils.gui import CheckerBoard, get_screen_settings
+from utils.speller_config_9_flicker import *
+from realtime_plot import Graph
+from models.trca import TRCA
 
 a = beeps(800)
 # Window parameters
@@ -37,8 +53,10 @@ print("Refresh Rate ==>", refresh_rate)
 
 # Time conversion to frames
 epoch_frames = int(EPOCH_DURATION * refresh_rate)
+
 print("Epoch frames ==>",epoch_frames)
 cue_frames = int(CUE_DURATION * refresh_rate)   
+print("Cue frames ==>",cue_frames)
 
 
 #Presentation content
@@ -52,21 +70,27 @@ calib_text_end = "Calibration phase completed"
 cal_start = visual.TextStim(window, text=calib_text_start, color=(-1., -1., -1.))
 cal_end = visual.TextStim(window, text=calib_text_end, color=(-1., -1., -1.))
 
-targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=35)
-        for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
+																										   
+															 
 
+targets = {f"{target}": visual.TextStim(win=window, text=target, pos=pos, color=(-1., -1., -1.), height=HEIGHT_OF_TARGET)
+            for pos, target in zip(POSITIONS, TARGET_CHARACTERS)}
 
 wave_type = "sin"
 
 flickers = {f"{target}": CheckerBoard(window=window, size=SIZE, frequency=f, phase=phase, amplitude=AMPLITUDE, 
                                     wave_type=wave_type, duration=EPOCH_DURATION, fps=refresh_rate,
-                                    base_pos=pos)
+                                    base_pos=pos, height=HEIGHT, width=WIDTH)
             for f, pos, phase, target in zip(FREQS, POSITIONS, PHASES, TARGET_CHARACTERS)}
+
+# for _,flicker in flickers.items():
+#     flicker.wave_func += -1 * 0.2 
 
 
 block_break_text = "Block Break 1 Minutes"
 block_break_start = visual.TextStim(window, text=block_break_text, color=(-1., -1., -1.))
-display_text_start = visual.TextStim(window, text="", color=(-1., -1., -1.), pos=(0,500))
+display_text_start = visual.TextStim(window, text=">", color=(-1., -1., -1.), pos=DISPLAY_BOX_POS)
+display_box = visual.Rect(window, size=DISPLAY_BOX_SIZE, pos=DISPLAY_BOX_POS, lineColor='black', lineWidth=2.5)
 
 def get_keypress():
     keys = event.getKeys()
@@ -88,19 +112,25 @@ def get_predicted_result(data):
     fs = 250
     num_harms = 5
     num_fbs = 5
+    # loaded_model = pickle.load(open(r"C:\Users\bci\Documents\projects\hybrid-ssvep-p300-speller\simple_ssvep_v2\TRCA_model.sav", 'rb'))
+    # result = loaded_model.predict(data)
+    # print("Here is the result", result[0])
     result = fbcca_realtime(data, list_freqs, list_phases, fs, num_harms, num_fbs)
-    # print("Target Character found", TARGET_CHARACTERS[result])
+    print("Target Character found", TARGET_CHARACTERS[result])
     return TARGET_CHARACTERS[result]
+    
+    # return list(filter(lambda x: MARKERS[x] == result[0], MARKERS))[0]
 
 def flicker(board):
     
     global frames
     global t0
+    global correct_count
+    global incorrect_count
     # For the flickering
-    
+   
     for target in sequence:
 
-        board_shim.get_board_data()
         get_keypress()
         target_flicker = flickers[str(target)]
         target_pos = (target_flicker.base_x, target_flicker.base_y)
@@ -111,26 +141,37 @@ def flicker(board):
         #Display the cue
         cue.pos = target_pos
         for frame in range(cue_frames):
-                cue.draw()
-                window.flip()
+            cue.draw()
+            window.flip()
 
+        board_shim.get_board_data()
+        core.wait(1)
         frames = 0
         for frame, j in enumerate(range(epoch_frames)):
             get_keypress()
             for flicker in flickers.values():
                 flicker.draw2(frame = frame)
+            # target_flicker.draw2(frame = frame)
             frames += 1
             window.flip()
         # predicting the output
-
+        core.wait(1)
         data = board_shim.get_board_data()
         data_copy = data.copy()
         raw = getdata(data_copy,BOARD_ID,n_samples = 250,dropEnable = False)
         # raw.plot_psd()
         output = get_predicted_result(raw.get_data())
-        display_text_start.setText(f"Output: {output}")
+        save_raw(raw,str(trialClock.getTime())+target,RECORDING_DIR, PARTICIPANT_ID)
+        print(raw.get_data()[:,:675].shape)
+        # output = get_predicted_result(raw.get_data()[:,:675])
+        if (output == target):
+            correct_count += 1
+        else:
+            incorrect_count +=1
+        display_text_start.text += output
         display_text_start.draw()
         window.flip()
+
         
 
 
@@ -138,6 +179,8 @@ def main():
     global sequence
     global trialClock
     global board_shim
+    global correct_count
+    global incorrect_count
 
     BoardShim.enable_dev_board_logger()
 
@@ -158,25 +201,29 @@ def main():
     logging.info('Begining the experiment')
 
     while True:
-
+        correct_count = 0
+        incorrect_count = 0
         # Starting the display
         trialClock = core.Clock()
         cal_start.draw()
         window.flip()
-        core.wait(6)
+        core.wait(3)
 
 
         a.hear('A_')
         drawTextOnScreen("Please donot move now",window)
-        core.wait(7)
+					
         sequence = random.sample(TARGET_CHARACTERS, len(TARGET_CHARACTERS))
         
         #board start streaming
         board_shim.start_stream()
+        core.wait(10)
+        # Graph(board_shim)
 
         for trials in range(NUM_TRIAL):
             get_keypress()
             # Drawing display box
+            display_box.autoDraw = True
             display_text_start.autoDraw = True
             window.flip()
 
@@ -187,19 +234,25 @@ def main():
                 # get_keypress()
             flicker(board_shim)
 
-            # At the end of the trial, calculate real duration and amount of frames
-            t1 = trialClock.getTime()  # Time at end of trial
-            elapsed = t1 - t0
-            print(f"Time elapsed: {elapsed}")
-            print(f"Total frames: {frames}")
+        # At the end of the trial, calculate real duration and amount of frames
+        t1 = trialClock.getTime()  # Time at end of trial
+        elapsed = t1 - t0
+        print(f"Time elapsed: {elapsed}")
+        print(f"Total frames: {frames}")
+        
+        acc = correct_count/(correct_count + incorrect_count)
+        print("correct count", correct_count)
+        print("incorrect count", incorrect_count)
+        print("Accuracy ==>", acc)
 
+        display_box.autoDraw = False
         display_text_start.autoDraw = False
         window.flip()
         for target in targets.values():
             target.autoDraw = False
      
         drawTextOnScreen('End of experiment, Thank you',window)
-        core.wait(3)
+        core.wait(10)
         break
 
 

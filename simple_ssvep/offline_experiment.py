@@ -231,7 +231,7 @@ def main():
                 data = board_shim.get_board_data()
                 data_copy = data.copy()
                 raw = getdata(data_copy, BOARD_ID, n_samples=250, dropEnable=False)
-                save_raw(raw, block_name, "simple_ssvep/record")
+                save_raw(raw, block_name, "simple_ssvep/record", PARTICIPANT_ID)
                 arrow.setAutoDraw(False)
                 if (block + 1) < 5: 
                     drawTextOnScreen('Block Break 1 Minute',mywin)
