@@ -1,0 +1,122 @@
+\setlength{\footskip}{8mm}
+
+\chapter{LITERATURE REVIEW}
+
+% BCI spellers help patients with severe motor disabilities \citep{chen2015high}. Over the years, numerous studies have been conducted to enhance the performance of BCI spellers, focusing on aspects such as speed, accuracy, and the number of targets that can be achieved. One promising approach in this field is the hybrid speller which combines multiple paradigms to achieve better performance. 
+
+\section{Hybrid SSVEP-P300 Brain-Computer Interface (BCI) speller}
+
+\textcolor{red}{Here we have to justify the reason we following \cite{xu2020implementing}}
+\textcolor{red}{We have to discuss how many hybrid variants are out there and their performance. Just very brief. The illustration might help, I guess. } 
+\textcolor{red}{Then we review \cite{xu2020implementing} method and explain the different or how it works. With some detail. We save TRCA for the later part.}
+\textcolor{red}{At the end, we have to explicitly say \cite{xu2020implementing} hybrid speller is the current state of the art}. 
+
+\cite{nakanishi2017enhancing} proposed Task Related Component Analysis (TRCA) based target identification algorithm. This study presented visual flickers encoded by the joint frequency-phase modulation (JFPM) method using the sampled sinusoidal stimulation technique, similar to  \cite{chen2014high}. Nine electrodes over the parietal and occipital regions (Pz, PO5, PO3, POz, PO4, PO6, O1, Oz, O2) were used to record EEG data at a sampling rate of 1,000 Hz using a Synamp2 system (Neuroscan,Inc.). The monitor's resolution and refresh rate were 1920 $\times$ 1080 pixels and 60 Hz, respectively. The user interface consisted of visual stimuli containing 40 characters in a 5 $\times$ 8 matrix. These stimuli spanned a frequency range of 8 Hz to 15.8 Hz with a frequency interval of 0.2 Hz, and their phase value began at 0 and their phase interval was 0.35$pi$. Using MATLAB (MathWorks, Inc.) and the Psychphysics Toolbox Version 3, the stimulus program was developed. This study compared target identification algorithms such as Extended CCA, TRCA, and TRCA ensemble. In terms of classification accuracy and ITR, spatial filters based on TRCA outperformed the extended CCA-based method. Notably, they achieved an impressive ITR of 325.33 $\pm$ 38.17 bits/min for online cue-guided applications, with a classification accuracy of 89.83 $\pm$ 6.07\%. Similarly, for online free-spelling tasks, they attained an ITR of 198.67 $\pm$ 50.48 bits/min and an accuracy of 36.17 $\pm$ 11.02 characters per minute (cpm). 
+
+Another noteworthy study by \cite{xu2020implementing} focused on the expansion of BCI speller's instruction set. By integrating the steady-state visual stimulus (SSVS) into the P300 speller, they created a 108-instruction BCI system with 12 parallel 3 $\times$ 3 P300 sub-spellers. Time-modulated SSVEP and frequency-phase-modulated P300 were identified as two new, distinct EEG features for concurrent P300 and SSVEP features. Ensemble TRCA was employed as the decoding algorithm. Using the JFPM method, the frequencies and phases of the 12 flickering stimuli were also determined. The visual stimuli were displayed on a 27-inch liquid-crystal display (LCD) monitor with a resolution of 1920 $by$ 1080 and a refresh rate of 120Hz. 13 electrodes were placed at Fz, Cz, Pz, PO3, PO4, PO5, PO6, PO7, PO8, POz, O1, Oz, and O2 according to the international 10/20 system and recorded using the Neuroscan Synamps2 system. In online cue-guided spelling and copy-spelling tests, their BCI system attained remarkable results with an average ITR of 172.46 $\pm$ 32.91 bits/min and 164.46 $\pm$ 33.32 bits/min, respectively. The average classification accuracy for online cue-guided spelling experiments was 81.67 $\pm$ 9.86\%, while it was 79.17 $\pm$ 10.02\% for online copy-spelling experiments.
+
+
+\section{Ensemble Task Related Component Analysis (TRCA)}
+
+Task Related Component Analysis (TRCA) is first introduced in \cite{nakanishi2017enhancing} and later improved to ensemble TRCA in \cite{xu2020implementing}.
+The model was shown to be effective in classification tasks on both SSVEP-based 40-target \citep{nakanishi2017enhancing} and hybrid SSVEP-P300 hybrid 108-target \citep{xu2020implementing} BCI speller, where the later one achieved state-of-the-art performance.
+ 
+
+Here we explained the ensemble TRCA algorithm briefly.  TRCA is an algorithm that finds the projection matrix $\mathbf{W} = [w_{j1} w_{j2} ... w_{Nc}]^T$ to maximize the covariance of task-related components between trials \cite{tanaka2013task}. $j1$ and $j2$ refers to the index of channels. For the recorded $Nc$ channels EEG signal $x(t) = \mathbb{R}^{Nc}$ . Task related component is computed as a linear, weighted sum of those input signals as:
+\begin{equation}\label{eq1}
+\begin{split}
+    y(t) & = \sum_{i=1}^{N}w_{i}x_{i}(t) \\
+         & = \mathbf{W}^{T}x(t)
+\end{split}
+\end{equation}
+
+Covariance between $h1$ and $h2$ trial is given by
+
+% \mathbf{x} - vector
+
+% \mathbf{X} - matrix
+ 
+% $x$ - a number
+
+% $\text{f}(x)$ - a function
+
+\begin{equation}\label{eq2}
+\begin{split}
+C_{h1,h2}&=\text{Cov}(y^{(h1)}(t),y^{(h2)}(t))\\
+&=\sum_{j1,j2=1}^{Nc} w_{j1}w_{j2}\text{Cov}(x_{j1}^{(h1)}(t), x_{j2}^{(h2)}(t))
+\end{split}
+\end{equation}
+
+All possible combination of trials are summed as:
+
+\begin{equation}\label{eq3}
+\begin{split}
+\sum_{\substack{h1,h2=1 \\ h1\neq h2}}^{N} C_{h1,h2} &= \sum_{\substack{h1,h2=1 \\ h1\neq h2}}^{N}\sum_{j1,j2=1}^{Nc} w_{j1}w_{j2}\text{Cov}(x_{j1}^{(h1)}(t), x_{j2}^{(h2)}(t)) \\
+&=\mathbf{W}^{T}\mathbf{S}\mathbf{W}
+\end{split}
+\end{equation}
+Here, the symmetric matrix $\mathbf{S} = (S_{j1,j2})_{1\leqslant j1,j1 \leq Nc }$  is defined by
+\begin{equation}\label{eq4}
+\begin{split}
+S_{j1,j2} = \sum_{\substack{h1,h2=1 \\ h1\neq h2}}^{N}w_{j1}w_{j2}\text{Cov}(x_{j1}^{h1}(t),x_{j2}^{h2})(t))
+\end{split}
+\end{equation}
+
+To obtain the final result, the following restriction is applied:
+\begin{equation}\label{eq5}
+\begin{split}
+Var(y(t)) &= \sum_{j1,j2=1}^{Nc}w_{j1}w_{j2}\text{Cov}(x_{j1}(t),x_{j2}(t))\\
+&=\mathbf{W}^T\mathbf{Q}\mathbf{W}\\
+&=1
+\end{split}
+\end{equation}
+The optimization problem can be solved as:
+\begin{equation}\label{eq6}
+\begin{split}
+\hat{w} = \underset{w}{\text{argmax}}\frac{(\mathbf{W}^T\mathbf{S}\mathbf{W})}{(\mathbf{W}^T\mathbf{Q}\mathbf{W})}
+\end{split}
+\end{equation}
+
+The optimal coefficient vector is obtained as the eigenvector of the matrix $\mathbf{Q}^{-1}\mathbf{S}$ 
+
+Since there are $N_{f}$ individual calibration data corresponding to all the visual stimuli,$N_{f}$ different spatial filter can be obtained. An ensemble spatial filter 
+\begin{equation}\label{eq7}
+\begin{split}
+\mathbf{W}^{(m)} = [w_{1}^{(m)} w_{2}^{(m)} ... w_{N_{f}}^{(m)}]
+\end{split}
+\end{equation}
+
+The correlation coefficient between projection of test data $\mathbf{X}^{(m)}$ and averaged individual template $\bar{\chi}^{(m)}$ is calculated as:
+
+\begin{equation}\label{eq8}
+\begin{split}
+r_{n}^{m} = \rho ((\mathbf{X}^{m}])^T \mathbf{W}^{(m)},(\bar{\chi})^T \mathbf{W}^{(m)})
+\end{split}
+\end{equation}
+
+The correlation coefficients in different sub-bands are weighted by:
+
+\begin{equation}\label{eq9}
+\begin{split}
+\rho _{n} = \sum_{m=1}^{Nb} (m^{(-1.25)} + 0.25) * (r_{n}^{(m)})^2 
+\end{split}
+\end{equation}
+
+Finally the target can be identified by the following equation:
+
+\begin{equation}\label{eq10}
+\begin{split}
+\tau _{t} = \underset{n}{\text{argmax}} \rho _{n}
+\end{split}
+\end{equation}
+
+
+
+\section{Equipment}
+
+The Synamp2 system (Neuroscan, Inc.) \textcolor{red}{cite (if you can)} is used in the implementation of both \cite{nakanishi2017enhancing} and \cite{xu2020implementing}. 
+The headset is capable of recording 64 channels with a 1000 Hz sampling rate.
+However, the recorded signals were sampled down to 250 Hz, and not all 64 channels were used in the analysis part.
+9 channels, namely Pz, POz, PO3, PO4, PO5, PO6, O1, O2, and Oz, were used in both works and an additional 4 channels (Fz, Cz, PO7, and PO8) were presented in \cite{xu2020implementing}. 
+In comparison, the g.tec Unicorn EEG headset is capable of recording 8 channels (Fz, Cz, C3, C4, Pz, PO7, PO8, and Oz) with 250 Hz.
+The consumer-grade g.tec Unicorn should perform on par with the down-sampled Synamp2 system (Neuroscan, Inc.).

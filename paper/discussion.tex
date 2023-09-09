@@ -1,0 +1,34 @@
+\setlength{\footskip}{8mm}
+
+\chapter{DISCUSSION}
+
+\section{Feasibility and effectiveness of Consumer-Grade EEG Headsets }
+
+Our study explored the feasibility of using consumer-grade EEG headsets for developing a hybrid BCI speller, and we found it to be a viable option. However, it is important to note that consumer-grade headsets come with certain limitations. We observed that a larger number of samples were required to train the model compared to studies utilizing clinical-grade EEG headsets, such as the work by \cite{xu2020implementing}. This could be attributed to the noisy data obtained from the consumer-grade headset, which may not offer the same level of signal quality as clinical-grade devices. Additionally, we found that longer stimuli duration was necessary to achieve better performance. Shorter durations resulted in reduced accuracy, potentially due to the less prominent SSVEP and P300 signals captured by the headset. Furthermore, as the number of targets increased, we observed a decline in performance, which could potentially be attributed to the influence of each target on the others. The crowded nature of the stimuli on the screen, with less spatial separation between them, may have caused interference and resulted in poorer signal quality. By acknowledging these limitations and considering the specific requirements and constraints of consumer-grade EEG headsets, it can still be effectively utilized for hybrid BCI Spellers. 
+
+\section{Long-term viability of the ensemble TRCA trained model}
+
+Based on the results of our study 2, we discovered that the TRCA trained model exhibited consistent performance even after a few days. We conducted an assessment immediately after the offline experiment and another assessment at least one day later, and found that the model's performance remained similar. This finding suggests that it is feasible to combine data from multiple sessions, enabling us to gather training data from a single participant across multiple days. By doing so, we can alleviate user fatigue and effectively train the model using a broader range of data.
+
+This long-term viability of the TRCA trained model opens up new possibilities for developing robust and sustainable BCIs. By utilizing data collected over multiple days, we can enhance the overall performance and reliability of the system. Further research and experimentation in this area will be valuable in optimizing the training process and maximizing the long-term potential of TRCA-based BCIs.
+
+\section{Inter-individual Variability in Performance}
+
+The variability in participants' performance in our study can be influenced by several factors, including their level of alertness, ability to focus, sustain attention, and exhibit patience. Fatigue or drowsiness can impair concentration and performance, leading to lower accuracy. Participants who struggle to stay focused or experience mental fatigue may also encounter difficulties in maintaining consistent performance. Additionally, individual differences in attentional control can play a role in performance variations. Participants with better attentional control tend to perform more accurately and efficiently. Understanding these factors can assist in optimizing the design of BCIs, tailoring them to individual needs, and enhancing overall user experience and performance. Further research can explore additional subjective and objective assessments to gain a deeper understanding of these factors and their impact on BCI performance.
+
+\section{Guidelines}  
+\begin{enumerate}
+    \item Utilize Wet Recording: Although the g.tec Unicorn Hybrid Black Headset supports dry recording, we recommend starting with wet recording. This method produces higher-quality signals that are less affected by participant movement or external disturbances. By opting for wet recording from the beginning, researchers can ensure optimal signal quality, leading to better results.
+    \item Maximize Sample Collection: It is advisable to collect as many samples as possible for each class when training the ensemble TRCA model. Increasing the sample size in the initial stages enhances the model's performance and generalization capabilities, improving overall results.
+    \item Begin with SSVEP-only Speller: Prior to delving into hybrid BCI spellers, it is beneficial to begin with an SSVEP-only speller. This approach allows researchers to better understand the obtained signals and validate the working of the model and presence of SSVEP component.
+    \item Utilize Time and Frequency Domain Plots: Employ time domain and frequency domain plots, such as PSD plots and Short Time Fourier Transform (STFT) plots, from the outset. These visual representations aid in assessing whether the desired features are accurately evoked by the stimuli.
+    \item Account for Interparticipant Variability: Recognize that performance may vary among participants. To account for this variability, it is advisable to include multiple participants in the initial development phase rather than relying solely on data from a single individual. This broader sampling can provide valuable insights and enhance the generalizability of the BCI system.
+\end{enumerate}
+
+\section{Implications}
+
+From our study it is known that yes we can use consumer grade EEG for developing a speller but when the target is not too many. It can better support lower number of commands smoothly for example move left, right, down. So in case of lower number of targets this headset can give better performance.
+
+\section{Limitation and Future Work}
+
+Currently based on the research so far we were able to support upto 16 target speller. However, since we found that the model is good for long-term performance exploring on combinind multiple session to better train the model and expand the speller could be possible. Furthermore, more techiniques can to 

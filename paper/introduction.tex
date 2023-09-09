@@ -1,0 +1,35 @@
+\chapter{INTRODUCTION} 
+
+\section{Background of the Study}
+
+The Steady State Visual Evoked Potential (SSVEP) and P300 paradigms have been used extensively to create Brain-Computer Interface (BCI) spellers.
+The current state of the art combines the P300 and SSVEP paradigms with sophisticated decoding algorithms such as ensemble Task Related Component Analysis (TRCA) to achieve higher performance and enable a greater number of target options.
+In a study conducted by \cite{nakanishi2017enhancing}, the TRCA-based approach was introduced and used to improve the accuracy of the SSVEP-based 40-target BCI speller. The results demonstrated that this method improves classification accuracy substantially in comparison to conventional methods such as extended Canonical Correlation Analysis (CCA). 
+The impressive information transfer rate (ITR) for the online cue-guided task was 325.33 $\pm$ 38.17 bits/min, while the ITR for the free spelling task was 198.67 $\pm$ 50.48 bits/min.
+\cite{xu2020implementing} proposed the implementation of ensemble TRCA, which introduced time-modulated SSVEP and frequency-phase-modulated P300, and obtained remarkable results. 
+Even with a large number of targets (108), the online cue-guided task yielded an ITR of 172.46 $\pm$ 32.91 bits/min and the copy spelling task obtained an ITR of 164.69 $\pm$ 33.32 bits/min.  
+These recent advancements emphasize the substantial benefits and improved results obtained by employing hybrid techniques, especially in conjunction with ensemble TRCA.
+Given the encouraging results, our ongoing efforts are focused on implementing a practical BCI Speller.
+
+\section{Statement of the Problem}
+
+However, past work on hybrid speller relies on costly, clinical-grade EEG headsets, which may not be suitable for widespread use. In general, higher-target BCI spellers were paired with clinical-grade headsets, whereas consumer-grade headset studies for hybrid BCI spellers were not well documented.
+By understanding the viability and limitations of using a consumer-grade EEG, we can potentially make hybrid spellers more accessible to the general public.
+
+\section{Objectives of the Study}
+
+\begin{sloppypar}
+This work examines the feasibility and efficacy of a hybrid BCI speller using a consumer-grade EEG headset (specifically, the g.tec Unicorn Hybrid Black EEG headset \cite{unicornbi} with 8 channels and 250 sampling rate).
+Following the success of \cite{xu2020implementing}, we seek to emulate the same approach while solving engineering problems along the way and understand the limits of the consumer-grade headset. 
+Secondly, despite the fact that numerous studies have proposed the use of ensemble TRCA, few evaluate the efficacy of the trained ensemble TRCA model after multiple days. 
+This is an important perspective since it is impractical if the trained model cannot be used after multiple days, simply because the day changes or the location of the cap changes slightly.
+\end{sloppypar}
+Particularly, the objectives of this thesis are threefold:
+
+\begin{enumerate}
+    \item Develop the hybrid BCI speller using the consumer-grade EEG along with the ensemble TRCA decoding algorithm
+    \item Perform engineering experiments to understand the limitations and provide a comprehensive account of our journey in identifying the optimal conditions and methodologies that successfully led to the development of the speller.
+    \item Perform user experiments to understand the long-term viability of the trained ensemble TRCA model.
+\end{enumerate}
+
+The outcomes of our investigation, including the results, data, and code are available in \textit{https://github.com/sunsun101/hybrid-ssvep-p300-speller}.
