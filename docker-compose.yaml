@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  latex:
+    image: akraradets/latex:latest
+    build: 
+      context: .
+      dockerfile: .Dockerfile
+    volumes:
+      - ./latex:/root/latex
+      - ./.vscode-server/latex:/root/.vscode-server
