@@ -3,3 +3,8 @@
 build/
 dist/
 hybrid_speller.egg-info/
+/.vscode-server/*
+*.aux
+*.bbl
+*.synctex.gz
+!.keeps
