@@ -31,7 +31,6 @@ from models.cca import ECCA
 from utils.common import drawTextOnScreen, getdata, save_raw, save_csv
 from utils.gui import CheckerBoard, get_screen_settings
 from speller_config import *
-from realtime_plot import Graph
 from models.trca import TRCA
 from scipy import signal
 
