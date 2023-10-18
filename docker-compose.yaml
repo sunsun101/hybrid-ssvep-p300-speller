@@ -7,4 +7,7 @@ services:
       dockerfile: .Dockerfile
     volumes:
       - ./latex:/root/latex
-      - ./.vscode-server/latex:/root/.vscode-server
+      - vscode-server/latex:/root/.vscode-server
+
+volumes:
+  vscode-server:
