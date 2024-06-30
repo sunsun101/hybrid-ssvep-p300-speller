@@ -7,7 +7,15 @@ services:
       dockerfile: .Dockerfile
     volumes:
       - ./latex:/root/latex
-      - vscode-server/latex:/root/.vscode-server
-
+      - vscode-latex:/root/.vscode-server
+  python:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: python.Dockerfile
+    volumes:
+      - ./:/root/projects
+      - vscode-python:/root/.vscode-server
 volumes:
-  vscode-server:
+  vscode-latex:
+  vscode-python:
